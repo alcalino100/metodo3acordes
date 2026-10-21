@@ -61,6 +61,9 @@
     }
   </script>
 
+  <!-- Sentry Browser SDK (Client-Side Observability) -->
+  <script src="https://browser.sentry-cdn.com/7.119.0/bundle.min.js" crossorigin="anonymous" async defer></script>
+
   <!-- UTMify Pixel -->
   <script type="text/javascript" src="https://cdn.utmify.com.br/scripts/pixel/pixel.js" async defer></script>
   <script type="text/javascript">
@@ -1132,10 +1135,12 @@
         Método prático de violão desenvolvido para cristãos iniciantes que desejam adorar a Deus em família e no lar.
       </p>
 
-      <div class="flex justify-center gap-4 text-slate-400">
-        <a href="#" class="hover:text-amber-400 transition">Termos</a>
-        <a href="#" class="hover:text-amber-400 transition">Privacidade</a>
-        <a href="#" class="hover:text-amber-400 transition">Suporte</a>
+      <div class="flex justify-center items-center gap-4 text-slate-300 font-medium text-[11px]">
+        <button type="button" onclick="openLegalModal('termos')" class="hover:text-amber-400 underline underline-offset-4 decoration-white/20 hover:decoration-amber-400 transition">Termos de Uso</button>
+        <span class="text-white/20">•</span>
+        <button type="button" onclick="openLegalModal('privacidade')" class="hover:text-amber-400 underline underline-offset-4 decoration-white/20 hover:decoration-amber-400 transition">Política de Privacidade</button>
+        <span class="text-white/20">•</span>
+        <button type="button" onclick="openLegalModal('suporte')" class="hover:text-amber-400 underline underline-offset-4 decoration-white/20 hover:decoration-amber-400 transition">Suporte ao Aluno</button>
       </div>
 
       <p class="text-[9px] text-slate-500">
@@ -1174,6 +1179,53 @@
       <p class="text-[10px] text-emerald-400 font-medium">Acabou de adquirir o método</p>
     </div>
     <button type="button" onclick="dismissToast()" class="text-slate-400 hover:text-white text-xs p-1" aria-label="Fechar notificação">✕</button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL DE TERMOS DE USO, PRIVACIDADE E SUPORTE (LGPD & CDC ART. 49)    -->
+  <!-- ===================================================================== -->
+  <div 
+    id="legal-modal" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="legal-modal-title"
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none"
+  >
+    <div class="glass-panel max-w-xl w-full max-h-[85vh] rounded-2xl border border-amber-400/30 overflow-hidden flex flex-col shadow-2xl transform scale-95 transition-all duration-300">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-brand-deep/80">
+        <h3 id="legal-modal-title" class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+          📜 Documento Legal
+        </h3>
+        <button 
+          type="button" 
+          onclick="closeLegalModal()" 
+          class="text-slate-400 hover:text-white text-lg p-1 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition"
+          aria-label="Fechar janela"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Conteúdo com Scroll -->
+      <div id="legal-modal-body" class="p-5 text-xs text-slate-300 space-y-3 overflow-y-auto leading-relaxed max-h-[60vh] text-left">
+        <!-- Injetado dinamicamente via JS -->
+      </div>
+
+      <!-- Rodapé do Modal -->
+      <div class="px-5 py-3 border-t border-white/10 bg-brand-deep/80 flex items-center justify-between">
+        <span class="text-[10px] text-slate-400">Processado com segurança via Cakto</span>
+        <button 
+          type="button" 
+          onclick="closeLegalModal()" 
+          class="btn-press bg-amber-400 hover:bg-amber-500 text-brand-dark font-extrabold text-xs py-2 px-4 rounded-xl transition"
+        >
+          Entendido e Fechar
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <!-- ===================================================================== -->
@@ -1274,29 +1326,52 @@
       }
     }
 
-    // 3. Encaminhador dinâmico de UTMs para a Cakto com Debounce e Indicador de Progresso
+    // 3. Encaminhador dinâmico de UTMs para a Cakto com Debounce, Rate Limiting e Sanitização
     (function forwardUtms() {
       const baseUrl = 'https://pay.cakto.com.br/wtd6not_1074745';
       const searchParams = window.location.search;
       
       const caktoButtons = document.querySelectorAll('.cakto-btn, a[href*="cakto.com.br"]');
+      let lastCheckoutClickTimestamp = 0;
+      const RATE_LIMIT_MS = 2500;
       
       caktoButtons.forEach(btn => {
+        btn.setAttribute('rel', 'noopener noreferrer');
+        
         let finalUrl = baseUrl;
         if (searchParams) {
-          const separator = baseUrl.includes('?') ? '&' : '?';
-          finalUrl = baseUrl + separator + searchParams.substring(1);
+          try {
+            const urlObj = new URL(baseUrl);
+            const rawParams = new URLSearchParams(searchParams);
+            
+            rawParams.forEach((val, key) => {
+              const safeKey = key.replace(/[^\w\-_]/g, '');
+              const safeVal = val.replace(/[^\w\-_@.:,\s]/g, '');
+              if (safeKey) {
+                urlObj.searchParams.set(safeKey, safeVal);
+              }
+            });
+            finalUrl = urlObj.toString();
+          } catch {
+            finalUrl = baseUrl;
+          }
         }
         btn.href = finalUrl;
 
         btn.addEventListener('click', function(e) {
+          const now = Date.now();
+          if (now - lastCheckoutClickTimestamp < RATE_LIMIT_MS) {
+            e.preventDefault();
+            return;
+          }
+          lastCheckoutClickTimestamp = now;
+
           if (btn.dataset.navigating === 'true') {
             e.preventDefault();
             return;
           }
           btn.dataset.navigating = 'true';
 
-          // Disparo de evento Meta Pixel
           if (typeof fbq === 'function') {
             fbq('track', 'InitiateCheckout', {
               content_name: 'Método 3 Acordes',
@@ -1305,7 +1380,6 @@
             });
           }
 
-          // Feedback tátil de carregamento do botão
           const originalContent = btn.innerHTML;
           btn.innerHTML = `<span class="inline-flex items-center justify-center gap-2">
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-brand-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1349,7 +1423,7 @@
       document.querySelectorAll('.reveal-item').forEach(el => revealObserver.observe(el));
     }
 
-    // 4. Cronômetro regressivo
+    // 6. Cronômetro regressivo
     (function countdown() {
       let duration = 3 * 3600 + 42 * 60 + 19;
       const hoursEl = document.getElementById('timer-hours');
@@ -1370,7 +1444,7 @@
       }, 1000);
     })();
 
-    // 5. Barra fixa mobile ao rolar a tela
+    // 7. Barra fixa mobile ao rolar a tela
     (function stickyBar() {
       const bar = document.getElementById('sticky-bar');
       const ofertaSection = document.getElementById('oferta');
@@ -1388,7 +1462,7 @@
       }, { passive: true });
     })();
 
-    // 6. Toast de vendas recentes rotativo
+    // 8. Toast de vendas recentes rotativo
     const recentBuyers = [
       { name: 'Ricardo M. de Belo Horizonte/MG' },
       { name: 'Ana Paula S. de Curitiba/PR' },
@@ -1427,6 +1501,110 @@
     }
 
     setTimeout(showNextToast, 5000);
+
+    // 9. Sistema de Modais Legais (CDC Art. 49 & LGPD Lei 13.709/2018)
+    const legalTexts = {
+      termos: {
+        title: '📜 Termos de Uso e Condições Gerais',
+        content: `
+          <h4 class="font-bold text-amber-300 text-sm mb-1">1. Objeto e Natureza do Produto</h4>
+          <p class="mb-3">O <strong>Método Louvor em 3 Acordes</strong> é um material educacional em formato digital (e-book/apostila e guias complementares) destinado ao ensino prático de violão para iniciantes, com foco em louvores e canções cristãs.</p>
+          
+          <h4 class="font-bold text-amber-300 text-sm mb-1">2. Pagamento e Acesso</h4>
+          <p class="mb-3">A aquisição é realizada mediante pagamento único no valor promocional de <strong>R$ 27,90</strong> (ou opções parceladas no cartão de crédito), sem cobranças recorrentes ou mensalidades. O processamento financeiro é intermediado integralmente pela <strong>Cakto Tecnologia Ltda.</strong>, garantindo ambiente criptografado e seguro. O acesso aos arquivos digitais é liberado imediatamente após a confirmação do pagamento via e-mail cadastrado.</p>
+
+          <h4 class="font-bold text-amber-300 text-sm mb-1">3. Direito de Arrependimento e Garantia Incondicional (CDC Art. 49)</h4>
+          <p class="mb-3">Em estrito cumprimento ao <strong>Artigo 49 do Código de Defesa do Consumidor (Lei nº 8.078/1990)</strong>, o comprador possui prazo incondicional de <strong>7 (sete) dias corridos</strong> a contar da aprovação da compra para desistir da aquisição. A solicitação de reembolso pode ser feita diretamente pelo painel do cliente na Cakto ou pelo e-mail de suporte oficial, sendo restituído 100% do valor pago.</p>
+
+          <h4 class="font-bold text-amber-300 text-sm mb-1">4. Propriedade Intelectual</h4>
+          <p>Todo o conteúdo, diagramação, arranjos didáticos e cancioneiro são de titularidade do Método 3 Acordes. A licença concedida é pessoal e intransferível para estudo doméstico, sendo expressamente proibida a revenda, cópia comercial ou distribuição não autorizada.</p>
+        `
+      },
+      privacidade: {
+        title: '🔒 Política de Privacidade (Conformidade LGPD)',
+        content: `
+          <h4 class="font-bold text-amber-300 text-sm mb-1">1. Compromisso com a Privacidade</h4>
+          <p class="mb-3">Esta política rege o tratamento de dados pessoais em conformidade integral com a <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong>.</p>
+
+          <h4 class="font-bold text-amber-300 text-sm mb-1">2. Coleta e Finalidade de Tratamento</h4>
+          <p class="mb-3">Coletamos exclusivamente os dados necessários para o cumprimento do contrato e entrega do material: nome completo, endereço de e-mail e dados fiscais/faturamento exigidos pela legislação tributária brasileira. Tais dados são coletados e processados de forma segura na página de pagamento da <strong>Cakto Tecnologia Ltda.</strong></p>
+
+          <h4 class="font-bold text-amber-300 text-sm mb-1">3. Não Compartilhamento e Segurança</h4>
+          <p class="mb-3">Não vendemos, alugamos ou repassamos seus dados a terceiros não relacionados à prestação do serviço. Não armazenamos informações de cartão de crédito em nossos servidores; todos os dados de pagamento trafegam criptografados com padrão bancário TLS/SSL diretamente pela adquirente da Cakto.</p>
+
+          <h4 class="font-bold text-amber-300 text-sm mb-1">4. Direitos do Titular</h4>
+          <p>Você pode solicitar a qualquer momento a confirmação, correção ou exclusão definitiva de seus dados cadastrais enviando uma mensagem para o nosso suporte.</p>
+        `
+      },
+      suporte: {
+        title: '💬 Suporte ao Aluno e Atendimento',
+        content: `
+          <h4 class="font-bold text-amber-300 text-sm mb-1">Central de Atendimento ao Aluno</h4>
+          <p class="mb-3">Estamos aqui para garantir que sua jornada no violão seja abençoada e sem travas!</p>
+
+          <div class="glass-panel p-3 rounded-xl border border-white/10 space-y-2 mb-3">
+            <p><strong>📧 E-mail Oficial:</strong> <a href="mailto:suporte@metodo3acordes.shop" class="text-amber-400 underline">suporte@metodo3acordes.shop</a></p>
+            <p><strong>⚡ Central de Ajuda Cakto:</strong> Acesso direto na sua fatura e painel de compra Cakto</p>
+            <p><strong>⏰ Horário de Resposta:</strong> Segunda a Sexta, das 09h às 18h (resposta em até 24 horas úteis)</p>
+          </div>
+
+          <p class="text-[11px] text-slate-400">Para agilizar seu atendimento sobre acesso ou reembolso de 7 dias, tenha em mãos o número da transação Cakto ou o mesmo e-mail utilizado na compra.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      const modal = document.getElementById('legal-modal');
+      const titleEl = document.getElementById('legal-modal-title');
+      const bodyEl = document.getElementById('legal-modal-body');
+      
+      const doc = legalTexts[type] || legalTexts.termos;
+      if (titleEl) titleEl.innerHTML = doc.title;
+      if (bodyEl) bodyEl.innerHTML = doc.content;
+
+      if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        const card = modal.querySelector('.glass-panel');
+        if (card) card.classList.remove('scale-95');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeLegalModal() {
+      const modal = document.getElementById('legal-modal');
+      if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        const card = modal.querySelector('.glass-panel');
+        if (card) card.classList.add('scale-95');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Fechar modal com tecla ESC ou clique no backdrop
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLegalModal();
+    });
+    const modalEl = document.getElementById('legal-modal');
+    if (modalEl) {
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) closeLegalModal();
+      });
+    }
+
+    // 10. Observabilidade Client-Side (Sentry Error Boundary)
+    (function initObservability() {
+      window.addEventListener('error', (event) => {
+        if (window.Sentry && typeof window.Sentry.captureException === 'function') {
+          window.Sentry.captureException(event.error || new Error(event.message));
+        }
+      });
+
+      window.addEventListener('unhandledrejection', (event) => {
+        if (window.Sentry && typeof window.Sentry.captureException === 'function') {
+          window.Sentry.captureException(event.reason);
+        }
+      });
+    })();
   </script>
 </body>
 </html>
