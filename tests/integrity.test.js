@@ -175,3 +175,62 @@ test("Motion Principles, Skeletons e Tangibilidade Visual", () => {
     "Equalizador visual do player de áudio deve estar no DOM",
   );
 });
+
+test("Conformidade Legal (CDC Art. 49 e LGPD)", () => {
+  assert.match(
+    htmlContent,
+    /legal-modal/,
+    "Modal legal deve estar presente no DOM",
+  );
+  assert.match(
+    htmlContent,
+    /openLegalModal/,
+    "Função de abertura de modais legais deve existir",
+  );
+  assert.match(
+    htmlContent,
+    /Código de Defesa do Consumidor/i,
+    "Menção explícita ao CDC deve estar presente",
+  );
+  assert.match(
+    htmlContent,
+    /Lei Geral de Proteção de Dados/i,
+    "Menção explícita à LGPD deve estar presente",
+  );
+  assert.match(
+    htmlContent,
+    /suporte@metodo3acordes\.shop/,
+    "E-mail de suporte oficial deve constar nos documentos legais",
+  );
+});
+
+test("Observabilidade Client-Side (Sentry e Error Boundary)", () => {
+  assert.match(
+    htmlContent,
+    /sentry-cdn\.com/i,
+    "Script do SDK do Sentry deve estar incluído de forma assíncrona",
+  );
+  assert.match(
+    htmlContent,
+    /captureException/i,
+    "Error boundary global deve capturar exceções para o Sentry",
+  );
+  assert.match(
+    htmlContent,
+    /unhandledrejection/i,
+    "Tratamento de rejeições não capturadas de Promises deve existir",
+  );
+});
+
+test("Segurança e Sanitização de Parâmetros de Checkout", () => {
+  assert.match(
+    htmlContent,
+    /noopener noreferrer/i,
+    "Links de saída devem conter rel noopener noreferrer",
+  );
+  assert.match(
+    htmlContent,
+    /RATE_LIMIT_MS/i,
+    "Proteção de rate limiting / debounce contra spam de cliques deve existir",
+  );
+});
