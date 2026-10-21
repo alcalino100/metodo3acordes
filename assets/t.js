@@ -250,6 +250,28 @@
     }
     if (extra) for (var k in extra) body[k] = extra[k]
 
+    // Gravação local persistente para visualização no Painel /admin
+    try {
+      var evtObj = {
+        id: body.eventId,
+        type: type,
+        ts: Date.now(),
+        visitorId: visitorId,
+        sessionId: sessionId,
+        url: location.href,
+        referrer: document.referrer || null,
+        utms: body.utms,
+        clickIds: body.clickIds,
+        screen: body.screen,
+        lang: body.lang,
+        extra: extra || null
+      }
+      var existing = JSON.parse(localStorage.getItem('_rt_analytics_events') || '[]')
+      existing.unshift(evtObj)
+      if (existing.length > 500) existing.length = 500
+      localStorage.setItem('_rt_analytics_events', JSON.stringify(existing))
+    } catch (e) {}
+
     var json = JSON.stringify(body)
     var endpoint = ENDPOINT + '/api/collect'
     try {

@@ -1150,6 +1150,12 @@
         © <span id="year"></span> Método 3 Acordes. Todos os direitos reservados.
       </p>
 
+      <div class="pt-2">
+        <a href="admin/" class="text-[9px] text-slate-600 hover:text-amber-400/80 transition inline-flex items-center gap-1 opacity-60 hover:opacity-100">
+          🔒 Painel de Métricas & Tráfego
+        </a>
+      </div>
+
     </div>
   </footer>
 
@@ -1269,6 +1275,11 @@
         statusEl.classList.add('text-amber-400');
       }
 
+      // Telemetria para o Painel /admin
+      if (window.Tracker && typeof window.Tracker.track === 'function') {
+        window.Tracker.track('audio_play', { chord: chordName });
+      }
+
       clearTimeout(activeChordTimer);
       activeChordTimer = setTimeout(() => {
         if (buttonEl) {
@@ -1383,6 +1394,15 @@
             });
           }
 
+          // Telemetria para o Painel /admin
+          if (window.Tracker && typeof window.Tracker.track === 'function') {
+            window.Tracker.track('initiate_checkout', {
+              product: 'Método 3 Acordes',
+              value: 27.90,
+              currency: 'BRL'
+            });
+          }
+
           const originalContent = btn.innerHTML;
           btn.innerHTML = `<span class="inline-flex items-center justify-center gap-2">
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-brand-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1426,7 +1446,28 @@
       document.querySelectorAll('.reveal-item').forEach(el => revealObserver.observe(el));
     }
 
-    // 6. Cronômetro regressivo
+    // 6. Rastreamento de Profundidade de Scroll (Funil /admin)
+    (function trackScrollDepth() {
+      let tracked50 = false;
+      let tracked90 = false;
+      window.addEventListener('scroll', () => {
+        const scrollPct = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+        if (!tracked50 && scrollPct >= 0.5) {
+          tracked50 = true;
+          if (window.Tracker && typeof window.Tracker.track === 'function') {
+            window.Tracker.track('scroll_depth', { depth: '50%' });
+          }
+        }
+        if (!tracked90 && scrollPct >= 0.9) {
+          tracked90 = true;
+          if (window.Tracker && typeof window.Tracker.track === 'function') {
+            window.Tracker.track('scroll_depth', { depth: '90%' });
+          }
+        }
+      }, { passive: true });
+    })();
+
+    // 7. Cronômetro regressivo
     (function countdown() {
       let duration = 3 * 3600 + 42 * 60 + 19;
       const hoursEl = document.getElementById('timer-hours');
