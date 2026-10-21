@@ -209,6 +209,22 @@
       </div>
     </div>
 
+    <!-- BANNER DE DIAGNÓSTICO DE TRÁFEGO & DNS DO DOMÍNIO -->
+    <div class="glass-card rounded-2xl p-4 border border-amber-400/30 bg-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <span class="text-xl shrink-0">⚠️</span>
+        <div class="text-xs">
+          <p class="font-bold text-amber-300">Atenção sobre o Rastreamento de Tráfego Pago:</p>
+          <p class="text-slate-300 leading-relaxed mt-0.5">
+            Se houve cliques no Meta Ads e não apareceram aqui, verifique se o domínio <strong>metodo3acordes.shop</strong> já foi apontado para a Vercel. Caso o domínio ainda aponte para o servidor antigo do Lovable, os visitantes não chegam a carregar este código novo.
+          </p>
+        </div>
+      </div>
+      <a href="#utm-builder" class="btn-press bg-amber-400 hover:bg-amber-300 text-brand-dark font-black text-xs py-2 px-3.5 rounded-xl transition shrink-0 whitespace-nowrap">
+        Configurar UTMs dos Criativos ↓
+      </a>
+    </div>
+
     <!-- CARDS DE MÉTRICAS PRINCIPAIS (KPIs) -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
       
@@ -484,6 +500,89 @@
       </div>
     </div>
 
+    <!-- SEÇÃO: GERADOR E CONFIGURADOR DE UTMs PARA CRIATIVOS (META ADS / GOOGLE / TIKTOK) -->
+    <div id="utm-builder" class="glass-card rounded-2xl p-5 border border-amber-400/30">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+        <div>
+          <h3 class="text-sm font-black text-amber-300 flex items-center gap-2">
+            <span>🎯 Gerador & Configurador de UTMs para Criativos</span>
+          </h3>
+          <p class="text-xs text-slate-400">Configure os links e parâmetros para rastrear exatamente quem, quando e de qual anúncio veio cada venda</p>
+        </div>
+        <span class="text-[10px] font-bold bg-amber-400/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-400/30">
+          Padrão Meta Ads & Cakto
+        </span>
+      </div>
+
+      <!-- Configuração Rápida do Meta Ads (Campo "Parâmetros de URL") -->
+      <div class="bg-brand-dark/70 rounded-xl p-4 border border-white/10 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1.5">
+          <label class="text-xs font-bold text-white flex items-center gap-1.5">
+            <span>📌 Parâmetros Dinâmicos para o Gerenciador de Anúncios da Meta (Facebook / Instagram)</span>
+          </label>
+          <button type="button" onclick="copyMetaUtms()" class="btn-press bg-amber-400 text-brand-dark font-black text-[11px] py-1 px-3 rounded-lg flex items-center gap-1 shrink-0">
+            Copiar para o Meta Ads
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-2">Cole exatamente este texto no campo <strong>"Parâmetros de URL"</strong> (no final da edição de cada anúncio/criativo). A Meta preencherá os dados automaticamente:</p>
+        <div class="flex items-center gap-2">
+          <input 
+            type="text" 
+            id="meta-dynamic-utms" 
+            readonly 
+            value="utm_source={{site_source_name}}&utm_medium={{placement}}&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_term={{adset.name}}&src={{site_source_name}}|{{ad.id}}"
+            class="w-full font-mono text-xs bg-black/50 border border-white/15 rounded-lg py-2 px-3 text-amber-300 select-all focus:outline-none"
+          >
+        </div>
+      </div>
+
+      <!-- Construtor de Link Manual para Teste / WhatsApp / Bio -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Origem (utm_source):</label>
+          <select id="builder-source" onchange="updateGeneratedLink()" class="w-full text-xs bg-brand-deep/80 border border-white/10 rounded-xl py-2 px-3 text-white focus:outline-none focus:border-amber-400">
+            <option value="facebook">Facebook (facebook)</option>
+            <option value="instagram">Instagram (instagram)</option>
+            <option value="google">Google Ads (google)</option>
+            <option value="tiktok">TikTok Ads (tiktok)</option>
+            <option value="whatsapp">WhatsApp (whatsapp)</option>
+            <option value="bio">Link da Bio (bio)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Campanha (utm_campaign):</label>
+          <input type="text" id="builder-campaign" oninput="updateGeneratedLink()" value="louvor_3acordes_c1" placeholder="ex: louvor_c1" class="w-full text-xs bg-brand-deep/80 border border-white/10 rounded-xl py-2 px-3 text-white focus:outline-none focus:border-amber-400">
+        </div>
+
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Criativo (utm_content):</label>
+          <input type="text" id="builder-content" oninput="updateGeneratedLink()" value="video01_dedilhado" placeholder="ex: video01_dedilhado" class="w-full text-xs bg-brand-deep/80 border border-white/10 rounded-xl py-2 px-3 text-white focus:outline-none focus:border-amber-400">
+        </div>
+
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Público (utm_term):</label>
+          <input type="text" id="builder-term" oninput="updateGeneratedLink()" value="interesses_evangelicos" placeholder="ex: evangélicos" class="w-full text-xs bg-brand-deep/80 border border-white/10 rounded-xl py-2 px-3 text-white focus:outline-none focus:border-amber-400">
+        </div>
+      </div>
+
+      <!-- Link Final Gerado -->
+      <div class="bg-black/40 rounded-xl p-3 border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="min-w-0 flex-1">
+          <span class="text-[10px] text-slate-400 block uppercase font-bold">Link de Teste com UTMs:</span>
+          <span id="generated-url-text" class="text-xs font-mono text-emerald-400 truncate block select-all"></span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="copyGeneratedLink()" class="btn-press bg-brand-surface hover:bg-brand-surface/80 border border-white/10 text-white text-xs py-2 px-3 rounded-lg flex items-center gap-1">
+            📋 Copiar Link
+          </button>
+          <button type="button" onclick="testGeneratedLink()" class="btn-press bg-amber-400 hover:bg-amber-300 text-brand-dark font-black text-xs py-2 px-3 rounded-lg flex items-center gap-1">
+            🚀 Testar Acesso Agora
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- SEÇÃO: SIMULADOR DE WEBHOOK CAKTO & CONCILIAÇÃO -->
     <div class="glass-card rounded-2xl p-5 border border-amber-400/20">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -603,12 +702,15 @@
     }
 
     // 3. Atualização das Métricas e Funil
-    function refreshMetrics(showFeedback = true) {
+    async function refreshMetrics(showFeedback = true) {
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('rotate-180');
       setTimeout(() => {
         if (refreshIcon) refreshIcon.classList.remove('rotate-180');
       }, 500);
+
+      // Sincronizar com o servidor Vercel /api/events se disponível
+      await syncServerEvents();
 
       const allEvents = getStoredEvents();
       const events = filterEventsByTime(allEvents);
@@ -953,9 +1055,76 @@
         .replace(/"/g, '&quot;');
     }
 
+    // 11. Sincronização Serverless em Nuvem (/api/events)
+    async function syncServerEvents() {
+      try {
+        const res = await fetch('../api/events');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.events) && data.events.length > 0) {
+            const localEvents = getStoredEvents();
+            const existingIds = new Set(localEvents.map(e => e.id));
+            let addedCount = 0;
+            data.events.forEach(serverEvt => {
+              if (serverEvt && serverEvt.id && !existingIds.has(serverEvt.id)) {
+                localEvents.unshift(serverEvt);
+                existingIds.add(serverEvt.id);
+                addedCount++;
+              }
+            });
+            if (addedCount > 0) {
+              if (localEvents.length > 500) localEvents.length = 500;
+              localStorage.setItem('_rt_analytics_events', JSON.stringify(localEvents));
+            }
+          }
+        }
+      } catch {
+        // Fallback gracioso para persistência local
+      }
+    }
+
+    // 12. Gerador e Configurador de UTMs para Criativos
+    function copyMetaUtms() {
+      const input = document.getElementById('meta-dynamic-utms');
+      if (input) {
+        input.select();
+        navigator.clipboard.writeText(input.value);
+        showToast('Parâmetros copiados! Cole no campo "Parâmetros de URL" da Meta.', '📋');
+      }
+    }
+
+    function updateGeneratedLink() {
+      const source = document.getElementById('builder-source')?.value || 'facebook';
+      const campaign = document.getElementById('builder-campaign')?.value.trim() || 'louvor_3acordes_c1';
+      const content = document.getElementById('builder-content')?.value.trim() || 'video01_dedilhado';
+      const term = document.getElementById('builder-term')?.value.trim() || 'interesses_evangelicos';
+      
+      const baseUrl = window.location.origin ? (window.location.origin + window.location.pathname.replace(/\/admin\/?$/, '/')) : 'https://metodo3acordes.shop/';
+      const cleanBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+      
+      const fullUrl = `${cleanBase}?utm_source=${encodeURIComponent(source)}&utm_medium=${source === 'whatsapp' ? 'chat' : source === 'bio' ? 'profile' : 'cpc'}&utm_campaign=${encodeURIComponent(campaign)}&utm_content=${encodeURIComponent(content)}&utm_term=${encodeURIComponent(term)}&src=${encodeURIComponent(source)}|${encodeURIComponent(content)}`;
+      
+      const textEl = document.getElementById('generated-url-text');
+      if (textEl) textEl.textContent = fullUrl;
+      return fullUrl;
+    }
+
+    function copyGeneratedLink() {
+      const url = updateGeneratedLink();
+      navigator.clipboard.writeText(url);
+      showToast('Link completo com UTMs copiado para a área de transferência!', '📋');
+    }
+
+    function testGeneratedLink() {
+      const url = updateGeneratedLink();
+      window.open(url, '_blank');
+      showToast('Abrindo link de teste em nova aba... Volte aqui e clique em "Atualizar"!', '🚀');
+    }
+
     // Inicialização ao carregar a página
     window.addEventListener('DOMContentLoaded', () => {
       checkAuth();
+      updateGeneratedLink();
     });
   </script>
 </body>

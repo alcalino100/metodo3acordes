@@ -373,3 +373,37 @@ test("Telemetria e Disparo de Eventos da Landing Page para o Admin", () => {
     "Rodapé da landing page deve conter link para acesso ao painel admin",
   );
 });
+
+test("Gerador de UTMs e Rotas Serverless de Coleta (Vercel API)", () => {
+  const collectPath = path.join(rootDir, "api", "collect.js");
+  const eventsPath = path.join(rootDir, "api", "events.js");
+  const adminIndexPath = path.join(rootDir, "admin", "index.html");
+
+  assert.ok(
+    fs.existsSync(collectPath),
+    "api/collect.js deve existir na Vercel",
+  );
+  assert.ok(fs.existsSync(eventsPath), "api/events.js deve existir na Vercel");
+
+  const adminContent = fs.readFileSync(adminIndexPath, "utf-8");
+  assert.match(
+    adminContent,
+    /utm-builder/,
+    "admin/index.html deve ter a seção utm-builder",
+  );
+  assert.match(
+    adminContent,
+    /\{\{site_source_name\}\}/,
+    "Deve conter os parâmetros dinâmicos da Meta",
+  );
+  assert.match(
+    adminContent,
+    /copyMetaUtms/,
+    "Deve conter função de cópia para o Meta Ads",
+  );
+  assert.match(
+    adminContent,
+    /syncServerEvents/,
+    "Deve conter função para sincronizar eventos em nuvem",
+  );
+});
