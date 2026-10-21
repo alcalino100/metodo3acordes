@@ -2,6 +2,9 @@
 
 Landing page otimizada e responsiva para o infoproduto **"Método Louvor em 3 Acordes"**, desenvolvida para cristãos iniciantes que desejam aprender a tocar louvores no violão de forma rápida, sem pestanas e sem teorias complicadas.
 
+> 📖 **Diretrizes para Desenvolvedores e Agentes de IA:**  
+> Consulte o arquivo [PROJECT_CONTEXT.md](./PROJECT_CONTEXT.md) para o fluxo obrigatório de Issues, Pull Requests, Motion Principles e padrões arquiteturais antes de submeter alterações.
+
 ---
 
 ## 🚀 Destaques da Nova Versão
