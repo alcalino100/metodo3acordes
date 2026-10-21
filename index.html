@@ -2,7 +2,11 @@
 <html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#032018">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <title>Método 3 Acordes — Toque Seus Primeiros Louvores no Violão</title>
   
   <meta name="description" content="Tire o violão do armário e toque seus primeiros louvores em até 7 dias usando apenas 3 acordes simples sem pestana. Método 100% prático para cristãos iniciantes. De R$ 197 por apenas R$ 27,90.">
@@ -48,8 +52,9 @@
           },
           boxShadow: {
             'glow-gold': '0 0 25px -3px rgba(245, 158, 11, 0.45)',
-            'glow-gold-lg': '0 0 45px -5px rgba(245, 158, 11, 0.55)',
-            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.3)',
+            'glow-gold-lg': '0 0 40px -5px rgba(245, 158, 11, 0.60)',
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.35)',
+            'mobile-bottom': '0 -8px 25px rgba(0, 0, 0, 0.45)',
           }
         }
       }
@@ -80,32 +85,77 @@
   </noscript>
 
   <style>
-    /* Suavização de renderização e animações personalizadas */
+    /* ======================================================= */
+    /* MOBILE-FIRST ENGINE: RENDERING, TOUCH & SAFE AREAS     */
+    /* ======================================================= */
+    html {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
     body {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       background-color: #032018;
       color: #F8FAFC;
+      overscroll-behavior-y: none;
     }
 
+    /* Resposta instantânea de toque no mobile sem delay de 300ms */
+    button, a, [role="button"], summary {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* Feedback tátil imediato no clique/toque (Active State) */
+    .btn-press:active, .cakto-btn:active {
+      transform: scale(0.97) !important;
+      filter: brightness(0.95);
+      transition: transform 70ms ease-out;
+    }
+
+    /* Pulsação sutil e elegante do CTA */
     @keyframes pulseGlow {
       0%, 100% {
-        box-shadow: 0 0 20px 2px rgba(245, 158, 11, 0.45), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 18px 2px rgba(245, 158, 11, 0.45), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
         transform: translateY(0);
       }
       50% {
-        box-shadow: 0 0 35px 8px rgba(245, 158, 11, 0.65), 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 32px 6px rgba(245, 158, 11, 0.65), 0 8px 12px -3px rgba(0, 0, 0, 0.4);
         transform: translateY(-2px);
       }
     }
 
     .cta-pulse {
-      animation: pulseGlow 2.4s infinite ease-in-out;
+      animation: pulseGlow 2.5s infinite ease-in-out;
     }
 
-    .cta-pulse:hover {
-      animation: none;
-      transform: translateY(-2px) scale(1.01);
+    /* Hover restrito somente a desktop (evita botão preso no mobile) */
+    @media (hover: hover) and (pointer: fine) {
+      .cta-pulse:hover {
+        animation: none;
+        transform: translateY(-2px) scale(1.01);
+      }
+    }
+
+    /* Safe area insets para iPhone com notch/Dynamic Island */
+    .safe-top {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    .safe-bottom {
+      padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Scroll horizontal suave sem barra de rolagem feia */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     /* Detalhes de acordeão */
@@ -113,52 +163,49 @@
       display: none;
     }
 
-    /* Gradiente suave de texto dourado */
     .text-gradient-gold {
       background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    /* Linha sutil de destaque */
-    .border-gold-glow {
-      border-color: rgba(245, 158, 11, 0.35);
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-    }
   </style>
 </head>
-<body class="selection:bg-brand-gold selection:text-brand-dark min-h-screen flex flex-col font-sans">
+<body class="selection:bg-brand-gold selection:text-brand-dark min-h-screen flex flex-col font-sans pb-24 sm:pb-0">
 
   <!-- ========================================== -->
-  <!-- BARRA DE ANÚNCIO / ALERTA DE OPORTUNIDADE  -->
+  <!-- BARRA DE ANÚNCIO (COMPACTA NO MOBILE)      -->
   <!-- ========================================== -->
-  <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-brand-dark text-xs sm:text-sm font-extrabold py-2.5 px-4 text-center tracking-wide shadow-md flex items-center justify-center gap-2">
+  <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-brand-dark text-[11px] sm:text-xs font-black py-2 px-3 text-center tracking-wide shadow-md flex items-center justify-center gap-1.5 safe-top">
     <span class="inline-block animate-bounce">⚡</span>
-    <span><strong>OFERTA DE LANÇAMENTO:</strong> Material Completo + 4 Bônus Exclusivos por apenas <strong>R$ 27,90</strong> (Restam poucas vagas com este valor)</span>
+    <span><strong>OFERTA DE LANÇAMENTO:</strong> Método Completo + 4 Bônus por <strong class="underline decoration-brand-dark">R$ 27,90</strong></span>
   </div>
 
   <!-- ========================================== -->
-  <!-- CABEÇALHO / HEADER DE CONFIANÇA           -->
+  <!-- CABEÇALHO MOBILE-FIRST                     -->
   <!-- ========================================== -->
-  <header class="border-b border-white/10 bg-brand-deep/80 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg text-brand-dark font-black text-xl">
+  <header class="border-b border-white/10 bg-brand-deep/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-3.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      
+      <!-- Logo Compacta -->
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow text-brand-dark font-black text-base sm:text-lg">
           🎸
         </div>
         <div>
-          <span class="font-serif font-black tracking-wider text-base sm:text-lg text-white block leading-tight">LOUVOR EM 3 ACORDES</span>
-          <span class="text-[11px] text-amber-400 font-semibold tracking-wide">MÉTODO PRÁTICO PARA INICIANTES</span>
+          <span class="font-serif font-black tracking-wider text-xs sm:text-base text-white block leading-tight">LOUVOR EM 3 ACORDES</span>
+          <span class="text-[9px] sm:text-[11px] text-amber-400 font-semibold tracking-wide block leading-none">MÉTODO PRÁTICO PARA INICIANTES</span>
         </div>
-      </div>
+      </a>
       
+      <!-- Badges Desktop -->
       <div class="hidden md:flex items-center gap-5 text-xs text-slate-300 font-medium">
-        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> Compra 100% Segura</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> 100% Seguro</span>
         <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Acesso Imediato</span>
       </div>
 
-      <a href="#oferta" class="bg-amber-400 hover:bg-amber-300 text-brand-dark font-extrabold text-xs sm:text-sm py-2 px-4 rounded-full transition-all duration-200 active:scale-95 shadow">
-        COMEÇAR AGORA
+      <!-- Botão Direto no Header -->
+      <a href="#oferta" class="btn-press bg-amber-400 hover:bg-amber-300 text-brand-dark font-extrabold text-[11px] sm:text-xs py-2 px-3 sm:px-4 rounded-full shadow transition-all">
+        QUERO COMEÇAR
       </a>
     </div>
   </header>
@@ -166,118 +213,104 @@
   <main class="flex-grow">
 
     <!-- ========================================== -->
-    <!-- HERO SECTION / PRIMEIRA DOBRA DE ALTO IMPACTO -->
+    <!-- HERO SECTION — 100% OTIMIZADA PARA MOBILE   -->
     <!-- ========================================== -->
-    <section class="relative pt-8 sm:pt-14 pb-16 sm:pb-24 overflow-hidden bg-gradient-to-b from-brand-deep via-brand-dark to-brand-deep">
-      <!-- Elementos de iluminação de fundo -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-amber-500/10 blur-[130px] pointer-events-none"></div>
+    <section class="relative pt-6 sm:pt-12 pb-12 sm:pb-20 overflow-hidden bg-gradient-to-b from-brand-deep via-brand-dark to-brand-deep">
       
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+      <!-- Fundo difuso dourado -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-80 bg-amber-500/10 blur-[110px] pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         
-        <!-- Badge Superior do Hook -->
-        <div class="flex justify-center mb-5">
-          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-amber-400/10 text-amber-300 border border-amber-400/30 backdrop-blur-sm shadow-sm">
-            <span class="text-amber-400">✝️</span> Para você que deseja louvar a Deus no violão começando do absoluto zero
+        <!-- Badge de Identidade e Propósito -->
+        <div class="flex justify-center mb-3.5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-amber-400/10 text-amber-300 border border-amber-400/30 text-center">
+            <span>✝️</span> <span>Para cristãos iniciantes que começam do zero</span>
           </span>
         </div>
 
-        <!-- Headline Principal -->
-        <div class="text-center max-w-4xl mx-auto mb-6">
-          <h1 class="text-3xl sm:text-5xl md:text-6xl font-black text-white leading-[1.15] tracking-tight">
-            Tire o violão do armário e toque seus primeiros louvores em <span class="text-gradient-gold">até 7 dias</span> com apenas <span class="underline decoration-amber-400 decoration-wavy decoration-2 underline-offset-8">3 acordes simples</span>.
-          </h1>
-        </div>
+        <!-- Headline Principal — Otimizada para Celular -->
+        <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-white text-center leading-[1.2] tracking-tight mb-3">
+          Tire o violão do armário e toque seus primeiros louvores em <span class="text-gradient-gold">até 7 dias</span> com <span class="underline decoration-amber-400 decoration-2 underline-offset-4">3 acordes simples</span>.
+        </h1>
 
-        <!-- Subheadline com Quebra de Objeção Imediata -->
-        <p class="text-center text-slate-300 text-base sm:text-xl max-w-2xl mx-auto font-medium leading-relaxed mb-8">
-          Sem teorias cansativas, <strong>sem pestana dolorosa</strong> e sem se perder em vídeos soltos na internet. O método prático e 100% visual para você acompanhar os louvores mais amados na igreja e na sua família.
+        <!-- Subheadline Curta e Direta -->
+        <p class="text-center text-slate-300 text-xs sm:text-base leading-relaxed max-w-xl mx-auto mb-5 font-medium">
+          Sem teorias chatas, <strong>sem pestana dolorosa</strong> e sem se perder no YouTube. O passo a passo visual para louvar a Deus em casa e na sua igreja.
         </p>
 
-        <!-- Grade Visual do Hero (Copy + Mídia) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-6">
-          
-          <!-- Lado da Imagem de Destaque -->
-          <div class="lg:col-span-7 relative group">
-            <div class="relative rounded-3xl overflow-hidden border-2 border-amber-400/30 shadow-2xl bg-brand-surface/40">
-              <img 
-                src="assets/hero-violao-biblia-BblVi23x.jpg" 
-                alt="Violão e Bíblia Sagrada em momento de louvor" 
-                class="w-full h-auto object-cover transform duration-500 group-hover:scale-105"
-                loading="eager"
-              >
-              <!-- Gradiente sobre a foto -->
-              <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent"></div>
-              
-              <!-- Badge Flutuante sobre a imagem -->
-              <div class="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 bg-brand-deep/95 border border-amber-400/30 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 shadow-xl">
-                <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 font-bold text-lg">
-                  ✨
-                </div>
-                <div>
-                  <p class="text-white text-xs sm:text-sm font-bold">Mais de 1.840 cristãos já destravaram as mãos</p>
-                  <p class="text-slate-400 text-[11px] sm:text-xs">Método testado por donas de casa, pais de família, jovens e pastores</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lado do Card de Ação Rápida e Benefícios -->
-          <div class="lg:col-span-5 flex flex-col justify-center">
+        <!-- Imagem Visual com Badge Integrada -->
+        <div class="relative max-w-lg mx-auto mb-6 group">
+          <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-amber-400/30 shadow-2xl bg-brand-surface/40">
+            <img 
+              src="assets/hero-violao-biblia-BblVi23x.jpg" 
+              alt="Violão e Bíblia Sagrada em momento de louvor" 
+              class="w-full h-56 sm:h-72 object-cover object-center"
+              loading="eager"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-transparent to-transparent"></div>
             
-            <div class="bg-gradient-to-b from-brand-deep to-brand-forest/60 border border-amber-400/30 rounded-3xl p-6 sm:p-8 shadow-card backdrop-blur-sm relative">
-              
-              <div class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-wider text-amber-400">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                Inscrições Abertas — Acesso Vitalício
+            <!-- Badge Flutuante Mobile -->
+            <div class="absolute bottom-3 left-3 right-3 bg-brand-deep/90 border border-amber-400/30 backdrop-blur-md rounded-xl p-2.5 flex items-center gap-2.5 shadow-lg">
+              <div class="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 font-bold text-sm">
+                ⭐
               </div>
-
-              <!-- Lista de micro-benefícios com ícones -->
-              <div class="space-y-3.5 mb-6 text-sm text-slate-200">
-                <div class="flex items-start gap-3">
-                  <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</span>
-                  <span><strong>Zero Teoria Complicada:</strong> Você já pega no violão tocando desde a primeira página.</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</span>
-                  <span><strong>Sem Pestana:</strong> Acordes naturais com posições confortáveis para quem tem dedos duros.</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</span>
-                  <span><strong>Cancioneiro Cifrado:</strong> Mais de 30 louvores consagrados prontos para tocar.</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <span class="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</span>
-                  <span><strong>Material 100% Digital:</strong> Abra no celular, computador ou imprima sua apostila.</span>
-                </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-white text-xs font-bold truncate">+1.840 alunos já destravaram os dedos</p>
+                <p class="text-slate-400 text-[10px] truncate">Método testado por donas de casa, pais e jovens</p>
               </div>
-
-              <!-- Caixa de Preço no Hero -->
-              <div class="bg-black/30 border border-white/10 rounded-2xl p-4 mb-6 text-center">
-                <p class="text-xs text-slate-400 line-through">De R$ 197,00 por</p>
-                <div class="flex items-baseline justify-center gap-1.5 my-1">
-                  <span class="text-xs text-amber-300 font-semibold">Apenas</span>
-                  <span class="text-3xl sm:text-4xl font-black text-amber-400">R$ 27,90</span>
-                </div>
-                <p class="text-[11px] text-emerald-400 font-semibold">Pagamento único • Sem mensalidades</p>
-              </div>
-
-              <!-- Botão de Ação CTA com Glow -->
-              <a 
-                href="https://pay.cakto.com.br/wtd6not_1074745" 
-                class="cakto-btn cta-pulse block w-full text-center bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-brand-dark font-black text-base sm:text-lg py-4 px-6 rounded-2xl shadow-glow-gold hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-tight"
-              >
-                QUERO TOCAR MEUS LOUVORES 🎸
-              </a>
-
-              <!-- Selos de Segurança -->
-              <div class="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-400">
-                <span class="flex items-center gap-1">🔒 Compra Segura</span>
-                <span class="flex items-center gap-1">🛡️ 7 Dias de Garantia</span>
-                <span class="flex items-center gap-1">⚡ Liberação Imediata</span>
-              </div>
-
             </div>
+          </div>
+        </div>
 
+        <!-- ============================================== -->
+        <!-- CARD DE AÇÃO RÁPIDA (VISÍVEL NO PRIMEIRO SCROLL) -->
+        <!-- ============================================== -->
+        <div class="bg-gradient-to-b from-brand-forest/40 to-brand-deep/80 border border-amber-400/35 rounded-2xl p-4 sm:p-6 shadow-card max-w-lg mx-auto">
+          
+          <!-- Micro-benefícios em 2 colunas no mobile -->
+          <div class="grid grid-cols-2 gap-2 text-[11px] sm:text-xs text-slate-200 mb-4">
+            <div class="flex items-center gap-1.5">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>Zero Teoria</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>Sem Pestana</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>+30 Louvores</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>Acesso no Celular</strong></span>
+            </div>
+          </div>
+
+          <!-- Caixa de Preço Impactante -->
+          <div class="bg-black/40 border border-white/10 rounded-xl p-3 text-center mb-4">
+            <span class="text-[11px] text-slate-400 line-through block">De R$ 197,00 por apenas:</span>
+            <div class="flex items-baseline justify-center gap-1 my-0.5">
+              <span class="text-xs text-amber-300 font-semibold">Hoje:</span>
+              <span class="text-3xl sm:text-4xl font-black text-amber-400">R$ 27,90</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-semibold block">Pagamento Único • Sem Mensalidades</span>
+          </div>
+
+          <!-- Botão CTA Gigante de Polegar (Touch Friendly 56px) -->
+          <a 
+            href="https://pay.cakto.com.br/wtd6not_1074745" 
+            class="cakto-btn cta-pulse block w-full text-center bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-brand-dark font-black text-base sm:text-lg min-h-[56px] py-4 px-4 rounded-xl shadow-glow-gold uppercase tracking-tight"
+          >
+            QUERO TOCAR MEUS LOUVORES 🎸
+          </a>
+
+          <!-- Selos de Confiança Compactos -->
+          <div class="mt-3 flex items-center justify-around text-[10px] text-slate-400">
+            <span class="flex items-center gap-1">🔒 Compra Segura</span>
+            <span class="flex items-center gap-1">🛡️ 7 Dias Garantia</span>
+            <span class="flex items-center gap-1">⚡ Acesso Imediato</span>
           </div>
 
         </div>
@@ -286,115 +319,115 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- BARRA SOCIAL DE LOUVORES POPULARES         -->
+    <!-- CANÇÕES: CARROSSEL TOUCH NATIVO NO MOBILE  -->
     <!-- ========================================== -->
-    <section class="py-10 bg-brand-dark border-y border-white/10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <p class="text-center text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400/90 mb-6">
-          🎵 Louvores consagrados que você conseguirá tocar com apenas 3 acordes:
-        </p>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">CLÁSSICO</span>
-            <span class="text-sm font-bold text-white">Porque Ele Vive</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">ADORAÇÃO</span>
-            <span class="text-sm font-bold text-white">Quão Grande é Meu Deus</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">INTIMIDADE</span>
-            <span class="text-sm font-bold text-white">Lugar Secreto</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">HARPA CRISTÃ</span>
-            <span class="text-sm font-bold text-white">Alvo Mais Que a Neve</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">COMUNHÃO</span>
-            <span class="text-sm font-bold text-white">Em Espírito, Em Verdade</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">PODER</span>
-            <span class="text-sm font-bold text-white">Ruja o Leão</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">GRATIDÃO</span>
-            <span class="text-sm font-bold text-white">Grandioso És Tu</span>
-          </div>
-          <div class="bg-brand-deep/80 border border-white/10 rounded-xl p-3 text-center hover:border-amber-400/40 transition">
-            <span class="text-amber-400 font-serif font-black text-xs block">CONFIANÇA</span>
-            <span class="text-sm font-bold text-white">O Escudo</span>
-          </div>
+    <section class="py-8 bg-brand-dark border-y border-white/10">
+      <div class="max-w-4xl mx-auto px-4">
+        
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-bold uppercase tracking-wider text-amber-400/90">
+            🎵 Louvores com apenas 3 acordes:
+          </p>
+          <span class="text-[10px] text-slate-400 sm:hidden">👉 Deslize</span>
         </div>
+
+        <!-- Carrossel com Snap Touch no Celular / Grid no Desktop -->
+        <div class="flex sm:grid sm:grid-cols-4 gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1">
+          
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">CLÁSSICO</span>
+            <span class="text-xs font-bold text-white">Porque Ele Vive</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">ADORAÇÃO</span>
+            <span class="text-xs font-bold text-white">Quão Grande é Deus</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">INTIMIDADE</span>
+            <span class="text-xs font-bold text-white">Lugar Secreto</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">HARPA CRISTÃ</span>
+            <span class="text-xs font-bold text-white">Alvo Mais Que a Neve</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">COMUNHÃO</span>
+            <span class="text-xs font-bold text-white">Em Espírito e Verdade</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">PODER</span>
+            <span class="text-xs font-bold text-white">Ruja o Leão</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">GRATIDÃO</span>
+            <span class="text-xs font-bold text-white">Grandioso És Tu</span>
+          </div>
+
+          <div class="min-w-[130px] sm:min-w-0 snap-start bg-brand-deep/80 border border-white/10 rounded-xl p-2.5 text-center shrink-0">
+            <span class="text-[9px] text-amber-400 font-serif font-black block">FÉ</span>
+            <span class="text-xs font-bold text-white">O Escudo</span>
+          </div>
+
+        </div>
+
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: IDENTIFICAÇÃO COM A DOR DO INICIANTE -->
+    <!-- AS DORES DO INICIANTE (CARD STACK MOBILE)  -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-gradient-to-b from-brand-deep to-brand-dark">
+    <section class="py-10 sm:py-16 bg-gradient-to-b from-brand-deep to-brand-dark">
       <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="text-center mb-12">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">ISSO SOA FAMILIAR PARA VOCÊ?</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white">
-            Você comprou ou ganhou um violão com o sonho de adorar a Deus... Mas aí aconteceu isso:
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest block mb-1">VOCÊ SE IDENTIFICA COM ISSO?</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white">
+            Por que tanta gente desiste de tocar violão logo no começo?
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-12">
+        <div class="space-y-3 mb-6">
           
-          <div class="bg-brand-forest/30 border border-red-500/20 rounded-2xl p-6 relative">
-            <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center font-bold text-lg mb-3">
-              ✕
+          <div class="bg-brand-forest/30 border border-red-500/25 rounded-xl p-3.5 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 font-bold text-xs mt-0.5">✕</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white mb-0.5">Teoria cansativa e sem nexo</h3>
+              <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed">Vídeos que enrolam com termos gregos e partituras em vez de ensinar você a louvar.</p>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2">Excesso de Teoria no YouTube</h3>
-            <p class="text-slate-300 text-sm leading-relaxed">
-              Você abriu vídeos gratuitos e se deparou com termos complicados, escalas gregas e professores que tocam rápido demais sem explicar como posicionar a mão.
-            </p>
           </div>
 
-          <div class="bg-brand-forest/30 border border-red-500/20 rounded-2xl p-6 relative">
-            <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center font-bold text-lg mb-3">
-              ✕
+          <div class="bg-brand-forest/30 border border-red-500/25 rounded-xl p-3.5 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 font-bold text-xs mt-0.5">✕</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white mb-0.5">A dor da pestana no Fá Maior</h3>
+              <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed">Mandam você esmagar as cordas, seus dedos doem, o som sai abafado e você desanima.</p>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2">A Tortura da Pestana (Fá Maior)</h3>
-            <p class="text-slate-300 text-sm leading-relaxed">
-              Logo na primeira aula mandam você esmagar as seis cordas com o dedo indicador. Os dedos doem, o som sai abafado e parece que sua mão não nasceu para aquilo.
-            </p>
           </div>
 
-          <div class="bg-brand-forest/30 border border-red-500/20 rounded-2xl p-6 relative">
-            <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center font-bold text-lg mb-3">
-              ✕
+          <div class="bg-brand-forest/30 border border-red-500/25 rounded-xl p-3.5 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 font-bold text-xs mt-0.5">✕</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white mb-0.5">A troca de acordes trava o ritmo</h3>
+              <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed">Ao mudar de acorde, você precisa parar a batida para ajeitar dedo por dedo no braço.</p>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2">A Troca de Acordes Trava o Ritmo</h3>
-            <p class="text-slate-300 text-sm leading-relaxed">
-              Toda vez que você vai mudar de um acorde para outro, precisa parar a batida, olhar para o braço e ajeitar dedo por dedo. A música perde a graça.
-            </p>
-          </div>
-
-          <div class="bg-brand-forest/30 border border-red-500/20 rounded-2xl p-6 relative">
-            <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center font-bold text-lg mb-3">
-              ✕
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">O Violão Encostado e a Frustração</h3>
-            <p class="text-slate-300 text-sm leading-relaxed">
-              Com o tempo, o violão vai para cima do guarda-roupa ou fica pegando poeira no canto do quarto. E você fica achando que "não tem o dom da música".
-            </p>
           </div>
 
         </div>
 
-        <!-- O Ponto de Virada (The Epiphany) -->
-        <div class="bg-gradient-to-r from-amber-400/10 via-amber-400/20 to-amber-400/10 border-2 border-amber-400/40 rounded-3xl p-6 sm:p-8 text-center shadow-lg">
-          <p class="text-amber-400 font-extrabold text-xs sm:text-sm uppercase tracking-wider mb-2">A VERDADEIRA CAUSA:</p>
-          <h3 class="text-xl sm:text-2xl font-black text-white mb-3">
-            O problema NUNCA foi a sua idade, a grossura dos seus dedos ou a falta de talento.
+        <!-- A Resposta de Alívio -->
+        <div class="bg-gradient-to-r from-amber-400/10 via-amber-400/20 to-amber-400/10 border border-amber-400/40 rounded-2xl p-4 text-center">
+          <p class="text-amber-400 font-extrabold text-[10px] uppercase tracking-wider mb-1">A VERDADE QUE LIBERTA:</p>
+          <h3 class="text-sm sm:text-lg font-black text-white mb-1.5">
+            Você não precisa de 50 acordes para louvar a Deus.
           </h3>
-          <p class="text-slate-200 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            O problema é que ninguém te ensinou pelo caminho prático. <strong>Você não precisa aprender 50 acordes para louvar a Deus.</strong> A grande maioria dos hinos e cânticos de adoração foi composta sobre a mesma harmonia de apenas 3 acordes simples!
+          <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">
+            Mais de 80% das músicas mais tocadas nas igrejas foram compostas sobre a mesma harmonia de apenas <strong>3 acordes básicos</strong>.
           </p>
         </div>
 
@@ -402,173 +435,131 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: O SEGREDO DOS DEDOS ÂNCORA          -->
+    <!-- O SEGREDO DOS DEDOS ÂNCORA (ANATÔMICO)     -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-deep relative">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-16 bg-brand-deep relative">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="text-center max-w-3xl mx-auto mb-14">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">A MECÂNICA DO MÉTODO</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white mb-4">
-            Como funciona a técnica dos <span class="text-gradient-gold">"Dedos Âncora"</span>?
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest block mb-1">A TÉCNICA SECRETA</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white mb-2">
+            Como funcionam os <span class="text-gradient-gold">"Dedos Âncora"</span>?
           </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Veja exatamente como a posição dos dedos é simples e anatômica. Repare que os dedos marcados em <strong class="text-amber-400">dourado (3 e 4)</strong> quase não saem do lugar durante a transição:
+          <p class="text-slate-300 text-xs sm:text-sm max-w-md mx-auto">
+            Os dedos marcados em <strong class="text-amber-400">dourado (3 e 4)</strong> ficam sempre apoiados nas cordas de baixo. Você troca de acorde sem tirar a mão inteira!
           </p>
         </div>
 
-        <!-- Cards dos 3 Acordes de Ouro com Diagramas SVG -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Cards dos 3 Acordes SVG Otimizados para Mobile -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-6">
           
           <!-- Card Acorde 1: G -->
-          <div class="bg-brand-dark border border-amber-400/30 rounded-2xl p-6 text-center hover:border-amber-400 transition shadow-xl flex flex-col justify-between">
-            <div>
-              <div class="inline-block bg-amber-400 text-brand-dark font-black text-xs px-3 py-1 rounded-full uppercase mb-2">
-                Acorde 1 • A Base
-              </div>
-              <div class="text-3xl font-black text-white mb-1">Sol Maior (G)</div>
-              <div class="text-amber-400 text-xs font-semibold mb-3">Versão Facilitada</div>
+          <div class="bg-brand-dark border border-amber-400/30 rounded-2xl p-4 text-center shadow-lg">
+            <span class="bg-amber-400 text-brand-dark font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase inline-block mb-1">
+              Acorde 1 • A Base
+            </span>
+            <div class="text-2xl font-black text-white">Sol Maior (G)</div>
+            <p class="text-[10px] text-amber-400 mb-2">Versão Facilitada</p>
 
-              <!-- SVG Fretboard G -->
-              <svg viewBox="0 0 160 170" class="w-36 h-36 mx-auto my-2" xmlns="http://www.w3.org/2000/svg">
-                <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
-                <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
-                <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
-                <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
-                <!-- 6 cordas -->
-                <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
-                <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
-                <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
-                <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
-                <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
-                <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
-                <!-- Dedos: Dedo 2 (6ª corda, casa 3), Dedo 1 (5ª corda, casa 2), Dedo 3 (2ª corda, casa 3), Dedo 4 (1ª corda, casa 3) -->
-                <circle cx="25" cy="125" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="25" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
-                
-                <circle cx="47" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="47" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
-                
-                <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
-                <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
-                
-                <circle cx="135" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
-                <text x="135" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">4</text>
-              </svg>
-            </div>
+            <!-- SVG Fretboard G -->
+            <svg viewBox="0 0 160 170" class="w-28 h-28 mx-auto my-1" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
+              <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
+              <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
+              <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
+              <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
+              <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
+              <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
+              <circle cx="25" cy="125" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="25" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
+              <circle cx="47" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="47" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
+              <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+              <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
+              <circle cx="135" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+              <text x="135" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">4</text>
+            </svg>
 
-            <div class="bg-brand-surface/50 rounded-xl p-3 text-left text-xs text-slate-300 space-y-1 mt-3">
-              <p>🟡 <strong>Dedos 3 e 4:</strong> Fixos na base (Âncora).</p>
-              <p>🟢 <strong>Dedos 1 e 2:</strong> Apoiam suavemente em cima.</p>
-            </div>
+            <p class="text-[11px] text-slate-300 mt-2">
+              🟡 <strong>Dedos 3 e 4:</strong> Âncora nas cordas de baixo.
+            </p>
           </div>
 
-          <!-- Card Acorde 2: C9 (Destaque) -->
-          <div class="bg-brand-dark border-2 border-amber-400 rounded-2xl p-6 text-center shadow-glow-gold relative flex flex-col justify-between">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-brand-dark text-[11px] font-black px-3.5 py-0.5 rounded-full uppercase tracking-wider">
-              O Segredo da Transição
-            </div>
-            <div>
-              <div class="inline-block bg-amber-400 text-brand-dark font-black text-xs px-3 py-1 rounded-full uppercase mb-2 mt-2">
-                Acorde 2 • O Movimento
-              </div>
-              <div class="text-3xl font-black text-white mb-1">Dó com Nona (C9)</div>
-              <div class="text-amber-400 text-xs font-semibold mb-3">Apenas 1 Movimento Leve</div>
+          <!-- Card Acorde 2: C9 -->
+          <div class="bg-brand-dark border-2 border-amber-400 rounded-2xl p-4 text-center shadow-glow-gold relative">
+            <span class="bg-gradient-to-r from-amber-400 to-amber-500 text-brand-dark font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase inline-block mb-1">
+              Acorde 2 • O Movimento
+            </span>
+            <div class="text-2xl font-black text-white">Dó com Nona (C9)</div>
+            <p class="text-[10px] text-amber-300 mb-2">Apenas 1 movimento leve</p>
 
-              <!-- SVG Fretboard C9 -->
-              <svg viewBox="0 0 160 170" class="w-36 h-36 mx-auto my-2" xmlns="http://www.w3.org/2000/svg">
-                <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
-                <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
-                <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
-                <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
-                <!-- 6 cordas -->
-                <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
-                <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
-                <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
-                <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
-                <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
-                <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
-                <!-- Dedos: Dedo 2 desce para 5ª corda, Dedo 1 desce para 4ª corda; Dedos 3 e 4 no mesmo lugar! -->
-                <circle cx="47" cy="125" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="47" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
-                
-                <circle cx="69" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="69" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
-                
-                <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
-                <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
-                
-                <circle cx="135" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
-                <text x="135" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">4</text>
-              </svg>
-            </div>
+            <!-- SVG Fretboard C9 -->
+            <svg viewBox="0 0 160 170" class="w-28 h-28 mx-auto my-1" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
+              <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
+              <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
+              <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
+              <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
+              <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
+              <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
+              <circle cx="47" cy="125" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="47" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
+              <circle cx="69" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="69" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
+              <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+              <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
+              <circle cx="135" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+              <text x="135" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">4</text>
+            </svg>
 
-            <div class="bg-brand-surface/50 rounded-xl p-3 text-left text-xs text-slate-300 space-y-1 mt-3">
-              <p>🟡 <strong>Não tire a mão!</strong> Os dedos 3 e 4 continuam no mesmo lugar exato.</p>
-              <p>🟢 <strong>Dedos 1 e 2:</strong> Apenas descem 1 corda.</p>
-            </div>
+            <p class="text-[11px] text-amber-300 font-bold mt-2">
+              🟡 <strong>Não tire a mão!</strong> Dedos 3 e 4 continuam firmes.
+            </p>
           </div>
 
           <!-- Card Acorde 3: D -->
-          <div class="bg-brand-dark border border-amber-400/30 rounded-2xl p-6 text-center hover:border-amber-400 transition shadow-xl flex flex-col justify-between">
-            <div>
-              <div class="inline-block bg-amber-400 text-brand-dark font-black text-xs px-3 py-1 rounded-full uppercase mb-2">
-                Acorde 3 • A Resolução
-              </div>
-              <div class="text-3xl font-black text-white mb-1">Ré Maior (D)</div>
-              <div class="text-amber-400 text-xs font-semibold mb-3">O Toque Final</div>
+          <div class="bg-brand-dark border border-amber-400/30 rounded-2xl p-4 text-center shadow-lg">
+            <span class="bg-amber-400 text-brand-dark font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase inline-block mb-1">
+              Acorde 3 • A Resolução
+            </span>
+            <div class="text-2xl font-black text-white">Ré Maior (D)</div>
+            <p class="text-[10px] text-amber-400 mb-2">O Toque Final</p>
 
-              <!-- SVG Fretboard D -->
-              <svg viewBox="0 0 160 170" class="w-36 h-36 mx-auto my-2" xmlns="http://www.w3.org/2000/svg">
-                <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
-                <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
-                <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
-                <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
-                <!-- 6 cordas -->
-                <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
-                <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
-                <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
-                <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
-                <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
-                <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
-                <!-- Dedos: Dedo 1 na 3ª corda (casa 2), Dedo 2 na 1ª corda (casa 2), Dedo 3 na 2ª corda (casa 3 - ainda apoiado!) -->
-                <circle cx="91" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="91" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
-                
-                <circle cx="135" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
-                <text x="135" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
-                
-                <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
-                <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
-              </svg>
-            </div>
+            <!-- SVG Fretboard D -->
+            <svg viewBox="0 0 160 170" class="w-28 h-28 mx-auto my-1" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="25" width="110" height="120" fill="#06261c" stroke="#1d5c46" stroke-width="1.5" rx="4"/>
+              <rect x="23" y="22" width="114" height="6" fill="#f59e0b" rx="2"/>
+              <line x1="25" y1="65" x2="135" y2="65" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="105" x2="135" y2="105" stroke="#1d5c46" stroke-width="1.5"/>
+              <line x1="25" y1="25" x2="25" y2="145" stroke="#94a3b8" stroke-width="2.2"/>
+              <line x1="47" y1="25" x2="47" y2="145" stroke="#94a3b8" stroke-width="1.8"/>
+              <line x1="69" y1="25" x2="69" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="91" y1="25" x2="91" y2="145" stroke="#cbd5e1" stroke-width="1.2"/>
+              <line x1="113" y1="25" x2="113" y2="145" stroke="#cbd5e1" stroke-width="1"/>
+              <line x1="135" y1="25" x2="135" y2="145" stroke="#f8fafc" stroke-width="0.8"/>
+              <circle cx="91" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="91" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">1</text>
+              <circle cx="135" cy="85" r="8" fill="#10b981" stroke="#34d399" stroke-width="1.5"/>
+              <text x="135" y="88.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">2</text>
+              <circle cx="113" cy="125" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+              <text x="113" y="128.5" font-size="10" font-weight="900" fill="#032018" text-anchor="middle">3</text>
+            </svg>
 
-            <div class="bg-brand-surface/50 rounded-xl p-3 text-left text-xs text-slate-300 space-y-1 mt-3">
-              <p>🟡 <strong>Dedo 3 permanece apoiado:</strong> Guia de segurança para a mão.</p>
-              <p>🟢 <strong>Dedos 1 e 2:</strong> Encaixam naturalmente nas cordas de baixo.</p>
-            </div>
+            <p class="text-[11px] text-slate-300 mt-2">
+              🟡 <strong>Dedo 3 apoiado:</strong> Guia de segurança para a mão.
+            </p>
           </div>
 
         </div>
 
-        <!-- Legenda Visual dos Dedos -->
-        <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-300 mb-8 bg-brand-dark/60 border border-white/10 rounded-2xl p-3 max-w-md mx-auto">
-          <span class="flex items-center gap-2">
-            <span class="w-3.5 h-3.5 rounded-full bg-amber-400 inline-block"></span>
-            <strong>Dedo Âncora:</strong> Fixo / Estável
-          </span>
-          <span class="flex items-center gap-2">
-            <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 inline-block"></span>
-            <strong>Dedo de Apoio:</strong> Movimento Suave
-          </span>
-        </div>
-
-        <!-- Chamada de Impacto -->
         <div class="text-center">
-          <p class="text-slate-300 text-sm sm:text-base font-medium mb-6">
-            Com essa combinação anatômica, seu cérebro memoriza as posições em menos de 48 horas.
-          </p>
-          <a href="#oferta" class="inline-flex items-center justify-center gap-2 bg-brand-forest hover:bg-amber-400 text-white hover:text-brand-dark font-extrabold text-sm sm:text-base py-3.5 px-8 rounded-full border border-amber-400/40 transition duration-200">
+          <a href="#oferta" class="btn-press inline-block bg-brand-forest hover:bg-amber-400 text-white hover:text-brand-dark font-extrabold text-xs sm:text-sm py-3 px-6 rounded-full border border-amber-400/40 transition">
             QUERO APRENDER ESSES 3 ACORDES 🎸
           </a>
         </div>
@@ -577,234 +568,62 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: TRANSFORMAÇÃO ESPIRITUAL E FAMILIAR -->
+    <!-- COMPARAÇÃO MOBILE-FIRST (CARDS VERTICAIS)  -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-dark relative overflow-hidden">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-16 bg-brand-dark">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
-          <div class="lg:col-span-6 order-2 lg:order-1">
-            <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">O PROPÓSITO MAIOR</span>
-            <h2 class="text-2xl sm:text-4xl font-black text-white leading-tight mb-6">
-              Imagine a emoção de reunir sua família e conduzir o louvor na sua casa…
-            </h2>
-            
-            <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed">
-              <p>
-                O violão nunca foi feito apenas para músicos de palco ou artistas profissionais. O violão é um <strong>instrumento de comunhão e adoração</strong>.
-              </p>
-              <p>
-                Imagine chegar ao fim do domingo, sentar na sala com seu cônjuge e seus filhos, pegar o violão com confiança e começar a tocar <em>"Porque Ele Vive"</em>. Todos cantando a uma só voz, com lágrimas nos olhos e a presença do Espírito Santo enchendo o ambiente.
-              </p>
-              <p>
-                Imagine acordar pela manhã para o seu devocional a sós com Deus e conseguir dedilhar uma melodia de louvor e gratidão, transformando o seu quarto em um altar.
-              </p>
-              <p class="font-bold text-amber-300">
-                Essa realização está a apenas 3 acordes de distância de você. Não espere mais anos para começar.
-              </p>
-            </div>
-
-            <div class="mt-8">
-              <a href="#oferta" class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-bold text-sm sm:text-base group">
-                Sim, eu quero viver esses momentos no meu lar 
-                <span class="transform group-hover:translate-x-1 transition">→</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="lg:col-span-6 order-1 lg:order-2">
-            <div class="relative rounded-3xl overflow-hidden border-2 border-amber-400/40 shadow-2xl">
-              <img 
-                src="assets/familia-louvor-CSSx-gn5.jpg" 
-                alt="Família reunida cantando louvor com violão" 
-                class="w-full h-auto object-cover"
-                loading="lazy"
-              >
-              <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
-              <div class="absolute bottom-4 left-4 right-4 text-center">
-                <span class="inline-block bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300">
-                  Momento de adoração no culto doméstico
-                </span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEÇÃO: TABELA COMPARATIVA DE VANTAGENS     -->
-    <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-gradient-to-b from-brand-deep to-brand-dark">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6">
-        
-        <div class="text-center max-w-3xl mx-auto mb-12">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">COMPARE E DECIDA</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white mb-3">
-            Por que o Método 3 Acordes é a escolha mais inteligente?
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest block mb-1">COMPARE AS OPÇÕES</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white">
+            Por que o Método 3 Acordes é o caminho mais rápido?
           </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Veja a diferença entre tentar os métodos convencionais e seguir o nosso método prático:
-          </p>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse min-w-[620px] rounded-3xl overflow-hidden shadow-2xl">
-            <thead>
-              <tr class="bg-brand-surface text-slate-200 text-xs sm:text-sm uppercase tracking-wider">
-                <th class="p-4 sm:p-5 font-bold">O Que Você Considera</th>
-                <th class="p-4 sm:p-5 text-slate-400">Aulas Tradicionais</th>
-                <th class="p-4 sm:p-5 text-slate-400">Vídeos no YouTube</th>
-                <th class="p-4 sm:p-5 bg-amber-400 text-brand-dark font-black text-center">Método 3 Acordes</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-white/10 text-xs sm:text-sm bg-brand-deep/80 text-slate-300">
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-white">Custo Total</td>
-                <td class="p-4 sm:p-5 text-red-300">R$ 150 a R$ 250 / mês</td>
-                <td class="p-4 sm:p-5 text-slate-400">"Grátis" (custa seu tempo)</td>
-                <td class="p-4 sm:p-5 bg-amber-400/10 font-black text-amber-300 text-center border-x-2 border-amber-400">Apenas R$ 27,90 (Único)</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-white">Tempo até o 1º Louvor</td>
-                <td class="p-4 sm:p-5">3 a 6 meses de teoria</td>
-                <td class="p-4 sm:p-5">Indeterminado (maioria desiste)</td>
-                <td class="p-4 sm:p-5 bg-amber-400/10 font-black text-emerald-400 text-center border-x-2 border-amber-400">Em até 7 dias</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-white">Dores nos Dedos</td>
-                <td class="p-4 sm:p-5">Exigem pestana logo cedo</td>
-                <td class="p-4 sm:p-5">Vídeos ensinam o Fá dolorido</td>
-                <td class="p-4 sm:p-5 bg-amber-400/10 font-black text-emerald-400 text-center border-x-2 border-amber-400">Zero pestana (anatômico)</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-white">Foco do Repertório</td>
-                <td class="p-4 sm:p-5">Músicas seculares e teoria clássica</td>
-                <td class="p-4 sm:p-5">Tons aleatórios e complexos</td>
-                <td class="p-4 sm:p-5 bg-amber-400/10 font-black text-amber-300 text-center border-x-2 border-amber-400">100% Voltado para Louvores</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-white">Garantia de Satisfação</td>
-                <td class="p-4 sm:p-5">Nenhuma (mensalidade perdida)</td>
-                <td class="p-4 sm:p-5">Nenhuma</td>
-                <td class="p-4 sm:p-5 bg-amber-400/10 font-black text-emerald-400 text-center border-x-2 border-amber-400">7 Dias Risco Zero Cakto</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEÇÃO: O QUE VOCÊ VAI RECEBER (MÓDULOS)     -->
-    <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-gradient-to-b from-brand-dark via-brand-forest/40 to-brand-deep">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6">
-        
-        <div class="text-center max-w-3xl mx-auto mb-14">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">CONTEÚDO PROGRAMÁTICO</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white mb-4">
-            O que você encontrará no <span class="text-gradient-gold">Método 3 Acordes</span>:
-          </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Um material direto, sem enrolação e focado 100% no repertório cristão.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center mb-14">
+        <div class="space-y-3.5 mb-8">
           
-          <!-- Mockup 3D do E-book -->
-          <div class="md:col-span-5 flex justify-center">
-            <div class="relative group">
-              <img 
-                src="assets/mockup-ebook-CsRDhrHR.jpg" 
-                alt="Mockup do Ebook Louvor em 3 Acordes no tablet e celular" 
-                class="w-full max-w-sm rounded-2xl shadow-2xl border border-amber-400/30 transform duration-300 group-hover:scale-105"
-                loading="lazy"
-              >
-              <div class="text-center mt-3 text-xs text-slate-400">
-                Acesso digital instantâneo em PDF de alta resolução
-              </div>
+          <!-- Opção 1: Tradicional -->
+          <div class="bg-brand-deep/50 border border-white/10 rounded-2xl p-4 opacity-75">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                <span>❌</span> Aulas Tradicionais / Escola
+              </span>
+              <span class="text-[11px] text-red-300 font-semibold">R$ 150 a R$ 250 / mês</span>
             </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Meses apenas decorando teoria e partitura. Exigem pestana logo cedo e o foco costuma ser em músicas que não têm nada a ver com o louvor.
+            </p>
           </div>
 
-          <!-- Módulos em Accordion / Lista Estruturada -->
-          <div class="md:col-span-7 space-y-3.5">
-            
-            <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-4 hover:border-amber-400/40 transition">
-              <div class="flex items-start gap-3.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 font-black text-sm flex items-center justify-center shrink-0">
-                  01
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-white mb-1">Módulo 1: O Violão Sem Mistério</h3>
-                  <p class="text-slate-300 text-xs sm:text-sm">
-                    Partes do violão, postura ergonômica para não cansar as costas e afinação simplificada em 60 segundos usando aplicativo gratuito no celular.
-                  </p>
-                </div>
-              </div>
+          <!-- Opção 2: YouTube -->
+          <div class="bg-brand-deep/50 border border-white/10 rounded-2xl p-4 opacity-75">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                <span>⚠️</span> Vídeos Soltos no YouTube
+              </span>
+              <span class="text-[11px] text-slate-400">"Grátis" (custa seu tempo)</span>
             </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Conteúdo desordenado, sem começo, meio e fim. Cada vídeo ensina num tom diferente e você passa meses sem conseguir tocar uma música inteira.
+            </p>
+          </div>
 
-            <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-4 hover:border-amber-400/40 transition">
-              <div class="flex items-start gap-3.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 font-black text-sm flex items-center justify-center shrink-0">
-                  02
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-white mb-1">Módulo 2: O Mapa dos 3 Acordes de Ouro</h3>
-                  <p class="text-slate-300 text-xs sm:text-sm">
-                    A anatomia das mãos, macetes para o som não sair abafado e o domínio das 3 posições que tocam 80% dos louvores (sem nenhuma pestana).
-                  </p>
-                </div>
-              </div>
+          <!-- Opção 3: O Vencedor (Método 3 Acordes) -->
+          <div class="bg-gradient-to-b from-brand-forest to-brand-deep border-2 border-amber-400 rounded-2xl p-4 shadow-glow-gold relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <span>⭐</span> MÉTODO 3 ACORDES
+              </span>
+              <span class="text-xs font-black text-emerald-400 bg-black/40 px-2 py-0.5 rounded-full">
+                R$ 27,90 (ÚNICO)
+              </span>
             </div>
-
-            <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-4 hover:border-amber-400/40 transition">
-              <div class="flex items-start gap-3.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 font-black text-sm flex items-center justify-center shrink-0">
-                  03
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-white mb-1">Módulo 3: O Ritmo da Adoração (Batidas & Levadas)</h3>
-                  <p class="text-slate-300 text-xs sm:text-sm">
-                    Guia ilustrado com setas visuais simples (para cima e para baixo). Aprenda a batida de balada gospel, pop adoração e ritmo solene da Harpa.
-                  </p>
-                </div>
-              </div>
+            <div class="space-y-1 text-xs text-slate-200">
+              <p>✓ <strong>Primeiros louvores em até 7 dias</strong></p>
+              <p>✓ <strong>Zero pestana dolorosa</strong> (Técnica dos Dedos Âncora)</p>
+              <p>✓ <strong>100% focado em hinos e cânticos de adoração</strong></p>
+              <p>✓ <strong>7 Dias de Garantia Total na Cakto</strong></p>
             </div>
-
-            <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-4 hover:border-amber-400/40 transition">
-              <div class="flex items-start gap-3.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 font-black text-sm flex items-center justify-center shrink-0">
-                  04
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-white mb-1">Módulo 4: A Arte da Transição Sem Travar</h3>
-                  <p class="text-slate-300 text-xs sm:text-sm">
-                    Exercícios de agilidade de 5 minutos por dia para treinar a memória muscular e nunca mais hesitar na hora de trocar de acorde.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-brand-dark/80 border border-white/10 rounded-2xl p-4 hover:border-amber-400/40 transition">
-              <div class="flex items-start gap-3.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 font-black text-sm flex items-center justify-center shrink-0">
-                  05
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-white mb-1">Módulo 5: Cancioneiro Cristão Cifrado em 3 Acordes</h3>
-                  <p class="text-slate-300 text-xs sm:text-sm">
-                    Mais de 30 louvores completos com letra grande, cifras coloridas no tom perfeito para você cantar junto sem forçar a voz.
-                  </p>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>
@@ -813,224 +632,239 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: 4 SUPER BÔNUS EXCLUSIVOS           -->
+    <!-- MOMENTO EM FAMÍLIA (EMOCIONAL)             -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-dark border-y border-white/10">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-16 bg-gradient-to-b from-brand-deep to-brand-dark">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="text-center max-w-3xl mx-auto mb-12">
-          <span class="inline-block bg-amber-400/10 text-amber-300 border border-amber-400/30 font-black text-xs px-3.5 py-1 rounded-full uppercase tracking-wider mb-2">
+        <div class="relative rounded-2xl overflow-hidden border-2 border-amber-400/40 shadow-2xl mb-6">
+          <img 
+            src="assets/familia-louvor-CSSx-gn5.jpg" 
+            alt="Família reunida cantando louvor com violão" 
+            class="w-full h-52 sm:h-80 object-cover"
+            loading="lazy"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent"></div>
+          <div class="absolute bottom-3 left-3 right-3 text-center">
+            <span class="bg-black/70 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-amber-300 inline-block">
+              Momentos de adoração no culto com a família
+            </span>
+          </div>
+        </div>
+
+        <div class="text-center max-w-xl mx-auto">
+          <h2 class="text-xl sm:text-2xl font-black text-white leading-tight mb-3">
+            O violão não é apenas madeira: é um canal de paz e adoração no seu lar.
+          </h2>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+            Imagine o próximo domingo à noite: você com seu violão na sala, seus filhos e familiares cantando juntos <em>"Porque Ele Vive"</em>, sentindo a presença de Deus bem ali.
+          </p>
+          <a href="#oferta" class="text-amber-400 font-bold text-xs sm:text-sm hover:underline">
+            Quero viver essa bênção na minha casa →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- O QUE VOCÊ VAI RECEBER (MÓDULOS & MOCKUP)  -->
+    <!-- ========================================== -->
+    <section class="py-10 sm:py-16 bg-brand-deep border-t border-white/10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest block mb-1">CONTEÚDO PROGRAMÁTICO</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white mb-2">
+            O que você encontrará no material:
+          </h2>
+        </div>
+
+        <!-- Mockup Imagem -->
+        <div class="max-w-xs mx-auto mb-6 text-center">
+          <img 
+            src="assets/mockup-ebook-CsRDhrHR.jpg" 
+            alt="Mockup do material no tablet e celular" 
+            class="w-full rounded-2xl shadow-xl border border-amber-400/30 mx-auto"
+            loading="lazy"
+          >
+          <span class="text-[10px] text-slate-400 mt-2 block">Material em alta resolução para celular, tablet ou impressão</span>
+        </div>
+
+        <!-- Lista de Módulos Compacta -->
+        <div class="space-y-2.5 mb-8">
+          
+          <div class="bg-brand-dark/80 border border-white/10 rounded-xl p-3 flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-400 font-black text-xs flex items-center justify-center shrink-0">01</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Módulo 1: O Violão Sem Mistério</h3>
+              <p class="text-slate-300 text-[11px]">Postura correta sem dor nas costas e afinação em 60s no celular.</p>
+            </div>
+          </div>
+
+          <div class="bg-brand-dark/80 border border-white/10 rounded-xl p-3 flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-400 font-black text-xs flex items-center justify-center shrink-0">02</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Módulo 2: O Mapa dos 3 Acordes de Ouro</h3>
+              <p class="text-slate-300 text-[11px]">As 3 posições anatômicas que tocam 80% das músicas da igreja sem pestana.</p>
+            </div>
+          </div>
+
+          <div class="bg-brand-dark/80 border border-white/10 rounded-xl p-3 flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-400 font-black text-xs flex items-center justify-center shrink-0">03</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Módulo 3: O Ritmo da Adoração (Batidas & Levadas)</h3>
+              <p class="text-slate-300 text-[11px]">Setas visuais para cima e para baixo: balada gospel, pop e ritmo da Harpa.</p>
+            </div>
+          </div>
+
+          <div class="bg-brand-dark/80 border border-white/10 rounded-xl p-3 flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-400 font-black text-xs flex items-center justify-center shrink-0">04</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Módulo 4: A Arte da Transição Sem Travar</h3>
+              <p class="text-slate-300 text-[11px]">Exercícios de 5 minutos para os dedos trocarem de acorde no tempo certo.</p>
+            </div>
+          </div>
+
+          <div class="bg-brand-dark/80 border border-white/10 rounded-xl p-3 flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-400 font-black text-xs flex items-center justify-center shrink-0">05</span>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white">Módulo 5: Cancioneiro Cifrado Passo a Passo</h3>
+              <p class="text-slate-300 text-[11px]">+30 louvores consagrados com cifras grandes e coloridas no tom ideal.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4 SUPER BÔNUS EXCLUSIVOS                  -->
+    <!-- ========================================== -->
+    <section class="py-10 sm:py-16 bg-brand-dark border-y border-white/10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        
+        <div class="text-center mb-6">
+          <span class="bg-amber-400/10 text-amber-300 border border-amber-400/30 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-1">
             PRESENTES ESPECIAIS DE HOJE
           </span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white mb-3">
-            Garanta sua vaga hoje e leve <span class="text-gradient-gold">4 Super Bônus Gratuitos</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white">
+            4 Super Bônus <span class="text-gradient-gold">100% Gratuitos</span>
           </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Materiais complementares avaliados em mais de R$ 150,00 que serão entregues sem custo adicional:
-          </p>
+          <p class="text-slate-300 text-xs sm:text-sm">Ao garantir sua inscrição agora, você recebe de brinde:</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
           
-          <!-- Bônus 1 -->
-          <div class="bg-brand-deep/90 border border-amber-400/30 rounded-2xl p-6 relative flex flex-col justify-between shadow-lg">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-black text-brand-dark bg-amber-400 px-2.5 py-1 rounded-md uppercase">BÔNUS #1</span>
-                <span class="text-xs text-slate-400 line-through">Valor normal: R$ 47,00</span>
-              </div>
-              <h3 class="text-lg font-bold text-white mb-2">📖 Dicionário Visual de Acordes Sem Pestana</h3>
-              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                Guia ilustrado com todas as variações facilitadas dos acordes principais. Quando uma música tiver um acorde difícil, consulte esse guia e substitua instantaneamente pela versão fácil.
-              </p>
+          <div class="bg-brand-deep/80 border border-amber-400/30 rounded-xl p-3.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-black bg-amber-400 text-brand-dark px-2 py-0.5 rounded">BÔNUS 1</span>
+              <span class="text-[10px] text-slate-400 line-through">Valor: R$ 47</span>
             </div>
-            <div class="text-xs font-bold text-emerald-400">✓ Incluso Gratuitamente Hoje</div>
+            <h3 class="text-xs sm:text-sm font-bold text-white mb-1">📖 Dicionário de Acordes Sem Pestana</h3>
+            <p class="text-slate-300 text-[11px]">Substitua acordes difíceis pelas variações simplificadas na hora.</p>
           </div>
 
-          <!-- Bônus 2 -->
-          <div class="bg-brand-deep/90 border border-amber-400/30 rounded-2xl p-6 relative flex flex-col justify-between shadow-lg">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-black text-brand-dark bg-amber-400 px-2.5 py-1 rounded-md uppercase">BÔNUS #2</span>
-                <span class="text-xs text-slate-400 line-through">Valor normal: R$ 47,00</span>
-              </div>
-              <h3 class="text-lg font-bold text-white mb-2">🎶 Cancioneiro Harpa Cristã & Hinos da Fé</h3>
-              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                Uma coletânea selecionada dos hinos mais tradicionais da igreja adaptados para 3 acordes. Ideal para o momento de ceia, cultos de oração e devocionais com os irmãos mais velhos.
-              </p>
+          <div class="bg-brand-deep/80 border border-amber-400/30 rounded-xl p-3.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-black bg-amber-400 text-brand-dark px-2 py-0.5 rounded">BÔNUS 2</span>
+              <span class="text-[10px] text-slate-400 line-through">Valor: R$ 47</span>
             </div>
-            <div class="text-xs font-bold text-emerald-400">✓ Incluso Gratuitamente Hoje</div>
+            <h3 class="text-xs sm:text-sm font-bold text-white mb-1">🎶 Cancioneiro Harpa Cristã & Hinos da Fé</h3>
+            <p class="text-slate-300 text-[11px]">Os hinos mais tradicionais da igreja adaptados para 3 acordes.</p>
           </div>
 
-          <!-- Bônus 3 -->
-          <div class="bg-brand-deep/90 border border-amber-400/30 rounded-2xl p-6 relative flex flex-col justify-between shadow-lg">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-black text-brand-dark bg-amber-400 px-2.5 py-1 rounded-md uppercase">BÔNUS #3</span>
-                <span class="text-xs text-slate-400 line-through">Valor normal: R$ 27,00</span>
-              </div>
-              <h3 class="text-lg font-bold text-white mb-2">📱 Guia de Afinação no Celular & Cuidados</h3>
-              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                Aprenda o passo a passo exato para deixar seu violão 100% afinado em menos de 1 minuto usando o microfone do seu celular, além de dicas para as cordas durarem muito mais.
-              </p>
+          <div class="bg-brand-deep/80 border border-amber-400/30 rounded-xl p-3.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-black bg-amber-400 text-brand-dark px-2 py-0.5 rounded">BÔNUS 3</span>
+              <span class="text-[10px] text-slate-400 line-through">Valor: R$ 27</span>
             </div>
-            <div class="text-xs font-bold text-emerald-400">✓ Incluso Gratuitamente Hoje</div>
+            <h3 class="text-xs sm:text-sm font-bold text-white mb-1">📱 Guia de Afinação no Celular & Cuidados</h3>
+            <p class="text-slate-300 text-[11px]">Como afinar em segundos com app grátis e fazer as cordas durarem.</p>
           </div>
 
-          <!-- Bônus 4 -->
-          <div class="bg-brand-deep/90 border border-amber-400/30 rounded-2xl p-6 relative flex flex-col justify-between shadow-lg">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-black text-brand-dark bg-amber-400 px-2.5 py-1 rounded-md uppercase">BÔNUS #4</span>
-                <span class="text-xs text-slate-400 line-through">Valor normal: R$ 37,00</span>
-              </div>
-              <h3 class="text-lg font-bold text-white mb-2">♾️ Acesso Vitalício + Atualizações Futuras</h3>
-              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                O material é seu para sempre. Baixe no seu celular, tablet, computador ou imprima quando quiser. Quando adicionarmos novas cifras e conteúdos, você receberá sem pagar um centavo a mais.
-              </p>
+          <div class="bg-brand-deep/80 border border-amber-400/30 rounded-xl p-3.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-black bg-amber-400 text-brand-dark px-2 py-0.5 rounded">BÔNUS 4</span>
+              <span class="text-[10px] text-slate-400 line-through">Valor: R$ 37</span>
             </div>
-            <div class="text-xs font-bold text-emerald-400">✓ Incluso Gratuitamente Hoje</div>
+            <h3 class="text-xs sm:text-sm font-bold text-white mb-1">♾️ Acesso Vitalício + Atualizações</h3>
+            <p class="text-slate-300 text-[11px]">O material é seu para sempre, com novas músicas adicionadas sem custo.</p>
           </div>
 
         </div>
 
-        <div class="bg-amber-400/10 border border-amber-400/30 rounded-2xl p-4 text-center max-w-2xl mx-auto">
-          <p class="text-xs sm:text-sm text-slate-300">
-            Total em bônus: <span class="line-through text-slate-400 font-bold">R$ 158,00</span> • <strong class="text-amber-300">HOJE: GRÁTIS</strong> ao adquirir o Método 3 Acordes.
-          </p>
+        <div class="bg-amber-400/10 border border-amber-400/30 rounded-xl p-2.5 text-center text-xs text-slate-300">
+          Total em bônus: <span class="line-through text-slate-400">R$ 158,00</span> • <strong class="text-amber-300">HOJE: GRÁTIS</strong>
         </div>
 
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: PROVA SOCIAL & DEPOIMENTOS          -->
+    <!-- DEPOIMENTOS HUMANIZADOS ESTILO WHATSAPP    -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-deep">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-16 bg-brand-deep">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="text-center max-w-3xl mx-auto mb-14">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">QUEM JÁ TESTOU APROVOU</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white mb-3">
-            Veja o que dizem nossos alunos que começaram do zero:
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest block mb-1">RELATOS REAIS</span>
+          <h2 class="text-xl sm:text-3xl font-black text-white">
+            Veja o que dizem nossos alunos:
           </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Histórias reais de pessoas que tinham os mesmos medos que você tem hoje.
-          </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-3.5 mb-8">
           
           <!-- Depoimento 1 -->
-          <div class="bg-brand-dark/90 border border-white/10 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
-            <div>
-              <div class="flex text-amber-400 mb-3 text-sm">★★★★★</div>
-              <p class="text-slate-300 text-sm italic leading-relaxed mb-6">
-                “Meu violão ficou mais de 3 anos guardado no quarto. Toda vez que tentava no YouTube eu desistia por causa da tal pestana. Com esse método eu entendi como usar os 3 acordes e em menos de 10 dias toquei 'Porque Ele Vive' no culto doméstico com minha esposa. Foi emocionante!”
-              </p>
-            </div>
-            <div class="flex items-center gap-3 pt-4 border-t border-white/10">
-              <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-sm">
+          <div class="bg-brand-dark/95 border border-white/10 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center gap-3 mb-2.5">
+              <div class="w-9 h-9 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-xs">
                 SM
               </div>
               <div>
-                <h4 class="text-sm font-bold text-white">Sebastião Martins, 56 anos</h4>
-                <p class="text-xs text-slate-400">Goiânia / GO • Aluno do método</p>
+                <h4 class="text-xs font-bold text-white">Sebastião Martins, 56 anos</h4>
+                <p class="text-[10px] text-slate-400">Goiânia / GO • Aluno do método</p>
               </div>
+              <div class="ml-auto text-amber-400 text-xs">★★★★★</div>
             </div>
+            <p class="text-slate-300 text-xs italic leading-relaxed">
+              “Meu violão ficou mais de 3 anos guardado no quarto. Toda vez que tentava no YouTube eu desistia por causa da pestana. Com esse método entendi a técnica dos 3 acordes e em menos de 10 dias toquei 'Porque Ele Vive' no almoço de domingo com a família!”
+            </p>
           </div>
 
           <!-- Depoimento 2 -->
-          <div class="bg-brand-dark/90 border border-white/10 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
-            <div>
-              <div class="flex text-amber-400 mb-3 text-sm">★★★★★</div>
-              <p class="text-slate-300 text-sm italic leading-relaxed mb-6">
-                “Eu achava que já tinha passado da idade de aprender e que meus dedos eram duros. Mas a explicação é tão visual e prática que não tem como errar. Hoje eu toco no meu momento de oração matinal todos os dias. O melhor valor que já investi na minha vida espiritual.”
-              </p>
-            </div>
-            <div class="flex items-center gap-3 pt-4 border-t border-white/10">
-              <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-sm">
+          <div class="bg-brand-dark/95 border border-white/10 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center gap-3 mb-2.5">
+              <div class="w-9 h-9 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-xs">
                 DL
               </div>
               <div>
-                <h4 class="text-sm font-bold text-white">Débora Lima, 48 anos</h4>
-                <p class="text-xs text-slate-400">Campinas / SP • Aluna do método</p>
+                <h4 class="text-xs font-bold text-white">Débora Lima, 48 anos</h4>
+                <p class="text-[10px] text-slate-400">Campinas / SP • Aluna do método</p>
               </div>
+              <div class="ml-auto text-amber-400 text-xs">★★★★★</div>
             </div>
+            <p class="text-slate-300 text-xs italic leading-relaxed">
+              “Achava que já tinha passado da idade de aprender e que meus dedos eram duros. Mas a explicação é tão visual e prática que não tem como errar. Hoje toco no meu momento de oração matinal todos os dias. O melhor valor que já investi!”
+            </p>
           </div>
 
           <!-- Depoimento 3 -->
-          <div class="bg-brand-dark/90 border border-white/10 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
-            <div>
-              <div class="flex text-amber-400 mb-3 text-sm">★★★★★</div>
-              <p class="text-slate-300 text-sm italic leading-relaxed mb-6">
-                “Sou pastor de uma congregação pequena e muitas vezes não tínhamos instrumentista para o louvor. Comprei a apostila para aprender o básico e foi a melhor decisão. O cancioneiro com as cifras simplificadas é excelente. Recomendo para qualquer irmão!”
-              </p>
-            </div>
-            <div class="flex items-center gap-3 pt-4 border-t border-white/10">
-              <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-sm">
+          <div class="bg-brand-dark/95 border border-white/10 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center gap-3 mb-2.5">
+              <div class="w-9 h-9 rounded-full bg-amber-400/20 text-amber-300 font-bold flex items-center justify-center text-xs">
                 RC
               </div>
               <div>
-                <h4 class="text-sm font-bold text-white">Pr. Roberto Cardoso, 42 anos</h4>
-                <p class="text-xs text-slate-400">Curitiba / PR • Aluno do método</p>
+                <h4 class="text-xs font-bold text-white">Pr. Roberto Cardoso, 42 anos</h4>
+                <p class="text-[10px] text-slate-400">Curitiba / PR • Aluno do método</p>
               </div>
+              <div class="ml-auto text-amber-400 text-xs">★★★★★</div>
             </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEÇÃO: QUEBRA DE OBJEÇÕES INTERATIVA       -->
-    <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-dark">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        
-        <div class="text-center mb-12">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">DÚVIDAS SINCERAS</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white">
-            “Mas será que eu realmente consigo aprender?”
-          </h2>
-        </div>
-
-        <div class="space-y-4">
-          
-          <div class="bg-brand-deep/80 border border-white/10 rounded-2xl p-5 sm:p-6">
-            <h3 class="text-base sm:text-lg font-bold text-amber-300 mb-2 flex items-center gap-2">
-              <span>👉</span> “Eu nunca segurei num violão antes na minha vida…”
-            </h3>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Perfeito! O método foi desenhado exatamente para quem está no marco zero. Nós não pressupomos que você saiba nada. Explicamos desde o jeito de sentar, como apoiar o instrumento, até a primeira batida passo a passo.
-            </p>
-          </div>
-
-          <div class="bg-brand-deep/80 border border-white/10 rounded-2xl p-5 sm:p-6">
-            <h3 class="text-base sm:text-lg font-bold text-amber-300 mb-2 flex items-center gap-2">
-              <span>👉</span> “Meus dedos são grossos, curtos ou duros demais…”
-            </h3>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Essa é uma das maiores mentiras que contam aos iniciantes. Violão não exige dedos de pianista nem mãos compridas. Exige apenas o ângulo correto do polegar atrás do braço do instrumento (alavanca anatômica). No Módulo 1 ensinamos esse ajuste que resolve na hora.
-            </p>
-          </div>
-
-          <div class="bg-brand-deep/80 border border-white/10 rounded-2xl p-5 sm:p-6">
-            <h3 class="text-base sm:text-lg font-bold text-amber-300 mb-2 flex items-center gap-2">
-              <span>👉</span> “Já passei dos 50 ou 60 anos, ainda dá tempo?”
-            </h3>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Mais de 40% dos nossos alunos têm mais de 50 anos! A música não tem idade. Aprender um instrumento estimula a memória, alivia a ansiedade e aproxima o coração de Deus. Você estuda no seu próprio ritmo, sem pressa e sem cobranças.
-            </p>
-          </div>
-
-          <div class="bg-brand-deep/80 border border-white/10 rounded-2xl p-5 sm:p-6">
-            <h3 class="text-base sm:text-lg font-bold text-amber-300 mb-2 flex items-center gap-2">
-              <span>👉</span> “Tenho pouco tempo no dia a dia…”
-            </h3>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Você não precisa de 2 horas de estudo diário. Apenas 15 a 20 minutos por dia de prática focada com o método são mais do que suficientes para você notar evolução constante semana a semana.
+            <p class="text-slate-300 text-xs italic leading-relaxed">
+              “Sou pastor de uma congregação pequena e muitas vezes não tínhamos instrumentista. Comprei para aprender o básico e foi a melhor decisão. O cancioneiro com as cifras simplificadas é excelente!”
             </p>
           </div>
 
@@ -1040,119 +874,105 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: OFERTA PRINCIPAL / O STACK DE VALOR  -->
+    <!-- OFERTA PRINCIPAL — A CAIXA DE CONVERSÃO     -->
     <!-- ========================================== -->
-    <section id="oferta" class="py-16 sm:py-24 bg-gradient-to-b from-brand-deep via-brand-forest/60 to-brand-deep relative">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <section id="oferta" class="py-10 sm:py-20 bg-gradient-to-b from-brand-deep via-brand-forest/60 to-brand-deep relative">
+      <div class="max-w-md sm:max-w-xl mx-auto px-4">
         
-        <!-- Caixa de Oferta em Destaque Absoluto -->
-        <div class="bg-gradient-to-b from-brand-dark to-brand-deep border-2 border-amber-400 rounded-3xl p-6 sm:p-10 shadow-glow-gold-lg relative overflow-hidden">
+        <div class="bg-gradient-to-b from-brand-dark to-brand-deep border-2 border-amber-400 rounded-3xl p-5 sm:p-8 shadow-glow-gold-lg relative overflow-hidden">
           
-          <!-- Faixa no Topo do Card -->
-          <div class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-brand-dark text-xs sm:text-sm font-black py-2 px-4 -mx-6 sm:-mx-10 -mt-6 sm:-mt-10 mb-6 sm:mb-8 text-center uppercase tracking-wider">
+          <!-- Faixa de Oferta Topo -->
+          <div class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-brand-dark text-xs font-black py-2 px-3 -mx-5 sm:-mx-8 -mt-5 sm:-mt-8 mb-5 text-center uppercase tracking-wider">
             🎉 OFERTA PROMOCIONAL EXCLUSIVA DE HOJE
           </div>
 
-          <!-- Cronômetro Regressivo Dinâmico -->
-          <div class="bg-black/40 border border-amber-400/30 rounded-2xl p-4 mb-8 text-center">
-            <p class="text-xs text-amber-300 font-bold uppercase tracking-wider mb-2">
-              ESTA CONDIÇÃO PROMOCIONAL SE ENCERRA EM:
-            </p>
-            <div class="flex items-center justify-center gap-3 text-white font-black text-xl sm:text-2xl">
-              <div class="bg-brand-surface px-3 py-1.5 rounded-lg border border-white/10">
+          <!-- Cronômetro Regressivo -->
+          <div class="bg-black/40 border border-amber-400/30 rounded-xl p-3 mb-5 text-center">
+            <span class="text-[10px] text-amber-300 font-bold uppercase tracking-wider block mb-1.5">
+              ESTA CONDIÇÃO SE ENCERRA EM:
+            </span>
+            <div class="flex items-center justify-center gap-2 text-white font-black text-lg">
+              <div class="bg-brand-surface px-2.5 py-1 rounded border border-white/10">
                 <span id="timer-hours">03</span>
-                <span class="text-[10px] block font-normal text-slate-400">Horas</span>
+                <span class="text-[8px] block font-normal text-slate-400">Horas</span>
               </div>
               <span>:</span>
-              <div class="bg-brand-surface px-3 py-1.5 rounded-lg border border-white/10">
+              <div class="bg-brand-surface px-2.5 py-1 rounded border border-white/10">
                 <span id="timer-minutes">42</span>
-                <span class="text-[10px] block font-normal text-slate-400">Minutos</span>
+                <span class="text-[8px] block font-normal text-slate-400">Minutos</span>
               </div>
               <span>:</span>
-              <div class="bg-brand-surface px-3 py-1.5 rounded-lg border border-white/10">
+              <div class="bg-brand-surface px-2.5 py-1 rounded border border-white/10">
                 <span id="timer-seconds">19</span>
-                <span class="text-[10px] block font-normal text-slate-400">Segundos</span>
+                <span class="text-[8px] block font-normal text-slate-400">Segundos</span>
               </div>
             </div>
           </div>
 
-          <div class="text-center mb-8">
-            <h3 class="text-2xl sm:text-3xl font-black text-white mb-2">
-              Método Louvor em 3 Acordes
-            </h3>
-            <p class="text-slate-300 text-sm">
-              O pacote completo e definitivo para você tocar suas primeiras canções cristãs.
-            </p>
+          <div class="text-center mb-5">
+            <h3 class="text-xl sm:text-2xl font-black text-white">Método Louvor em 3 Acordes</h3>
+            <p class="text-slate-300 text-xs">O pacote completo definitivo para cristãos iniciantes.</p>
           </div>
 
-          <!-- Checklist Completo de Tudo Incluso -->
-          <div class="space-y-3.5 mb-8 text-sm text-slate-200">
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>Apostila Completa Método 3 Acordes</strong> (Passo a passo visual do zero)</span>
+          <!-- Checklist Tudo Incluso -->
+          <div class="space-y-2 mb-6 text-xs text-slate-200">
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>Apostila Completa Método 3 Acordes</strong></span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>Cancioneiro Cifrado Exclusivo</strong> (+30 louvores preparados em 3 acordes)</span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>Cancioneiro Cifrado</strong> (+30 louvores preparados)</span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>Guia Prático de Batidas e Ritmos da Adoração</strong> (Setas visuais fáceis)</span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>Guia de Batidas e Ritmos da Adoração</strong></span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>BÔNUS 1:</strong> Dicionário Visual de Acordes Sem Pestana <span class="text-amber-300 font-bold">(R$ 47 de graça)</span></span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>BÔNUS 1:</strong> Dicionário de Acordes Sem Pestana</span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>BÔNUS 2:</strong> Cancioneiro Harpa Cristã & Hinos da Fé <span class="text-amber-300 font-bold">(R$ 47 de graça)</span></span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>BÔNUS 2:</strong> Cancioneiro Harpa Cristã Cifrado</span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>BÔNUS 3:</strong> Guia Rápido de Afinação e Cuidados no Celular <span class="text-amber-300 font-bold">(R$ 27 de graça)</span></span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>BÔNUS 3:</strong> Guia de Afinação no Celular</span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>BÔNUS 4:</strong> Acesso Vitalício + Todas as Futuras Atualizações <span class="text-amber-300 font-bold">(R$ 37 de graça)</span></span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>BÔNUS 4:</strong> Acesso Vitalício + Atualizações</span>
             </div>
-            <div class="flex items-start gap-3">
-              <span class="text-amber-400 font-black text-base shrink-0">✓</span>
-              <span><strong>Garantia Incondicional de 7 Dias</strong> (Risco zero para você)</span>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-black">✓</span>
+              <span><strong>Garantia Blindada de 7 Dias na Cakto</strong></span>
             </div>
           </div>
 
           <!-- Preço Ancorado -->
-          <div class="text-center pt-6 border-t border-white/10 mb-8">
-            <p class="text-sm text-slate-400">
-              Valor total de tudo somado: <span class="line-through text-red-400 font-bold">R$ 355,00</span>
-            </p>
-            <p class="text-xs text-amber-300 font-bold uppercase tracking-wider mt-1">
-              HOJE POR APENAS UM PAGAMENTO ÚNICO DE:
-            </p>
-            <div class="text-4xl sm:text-5xl font-black text-amber-400 my-2">
+          <div class="text-center pt-4 border-t border-white/10 mb-5">
+            <span class="text-xs text-slate-400 line-through">Valor somado: R$ 355,00</span>
+            <div class="text-3xl sm:text-4xl font-black text-amber-400 my-1">
               R$ 27,90
             </div>
-            <p class="text-xs text-slate-300">
-              ou em até <strong>3x de R$ 9,90</strong> no cartão de crédito
-            </p>
-            <p class="text-[11px] text-emerald-400 font-semibold mt-1">
-              Sem mensalidades • Sem cobranças adicionais • Acesso para sempre
-            </p>
+            <span class="text-xs text-slate-300 block">ou até <strong>3x de R$ 9,90</strong> no cartão</span>
+            <span class="text-[10px] text-emerald-400 font-semibold block mt-0.5">Pagamento Único • Sem Mensalidades</span>
           </div>
 
-          <!-- Botão CTA Principal -->
+          <!-- Botão Principal Cakto -->
           <a 
             href="https://pay.cakto.com.br/wtd6not_1074745" 
-            class="cakto-btn cta-pulse block w-full text-center bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-brand-dark font-black text-lg sm:text-xl py-4 sm:py-5 px-6 rounded-2xl shadow-glow-gold hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-tight"
+            class="cakto-btn cta-pulse block w-full text-center bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-brand-dark font-black text-base sm:text-lg min-h-[56px] py-4 px-4 rounded-xl shadow-glow-gold uppercase tracking-tight"
           >
-            QUERO MEU ACESSO AGORA POR R$ 27,90 🎸
+            QUERO MEU ACESSO AGORA 🎸
           </a>
 
-          <!-- Selos Cakto -->
-          <div class="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-slate-400">
-            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Checkout Seguro Cakto</span>
-            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Envio Imediato por E-mail</span>
-            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 7 Dias de Garantia Total</span>
+          <!-- Selos -->
+          <div class="mt-4 flex items-center justify-around text-[10px] text-slate-400">
+            <span>🔒 Checkout Cakto</span>
+            <span>⚡ Envio Imediato</span>
+            <span>🛡️ 7 Dias Garantia</span>
           </div>
 
         </div>
@@ -1161,115 +981,98 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: GARANTIA BLINDADA DE 7 DIAS         -->
+    <!-- GARANTIA BLINDADA DE 7 DIAS               -->
     <!-- ========================================== -->
-    <section class="py-14 bg-brand-dark">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <div class="bg-brand-surface/40 border border-amber-400/30 rounded-3xl p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-          
-          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex flex-col items-center justify-center shrink-0 shadow-lg text-brand-dark">
-            <span class="text-3xl font-black leading-none">7</span>
-            <span class="text-[10px] font-black uppercase tracking-wider">DIAS</span>
-            <span class="text-[9px] font-bold">GARANTIA</span>
+    <section class="py-8 sm:py-12 bg-brand-dark">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6">
+        <div class="bg-brand-surface/40 border border-amber-400/30 rounded-2xl p-4 sm:p-6 flex items-center gap-4">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex flex-col items-center justify-center shrink-0 shadow-lg text-brand-dark">
+            <span class="text-xl sm:text-2xl font-black leading-none">7</span>
+            <span class="text-[9px] font-black uppercase">DIAS</span>
           </div>
-
-          <div class="text-center sm:text-left">
-            <h3 class="text-xl sm:text-2xl font-black text-white mb-2">
-              Seu Risco é Absolutamente Zero: Garantia Blindada de 7 Dias
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-white mb-1">
+              Garantia Blindada de 7 Dias
             </h3>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-3">
-              Nós confiamos tanto na qualidade e simplicidade do <strong>Método 3 Acordes</strong> que assumimos todo o risco por você. Você tem 7 dias inteiros para baixar a apostila, testar os 3 acordes e praticar no seu violão.
-            </p>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-semibold text-amber-300">
-              Se por qualquer motivo você não gostar ou achar que não é para você, basta nos enviar uma única mensagem na Cakto que devolveremos 100% do seu dinheiro. Sem perguntas e sem ressentimentos.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed">
+              Teste por 7 dias no seu violão. Se por qualquer motivo não gostar, basta enviar uma mensagem na Cakto para receber 100% do seu dinheiro de volta. Risco zero!
             </p>
           </div>
-
         </div>
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEÇÃO: PERGUNTAS FREQUENTES (FAQ ACCORDION)-->
+    <!-- FAQ ACCORDION MOBILE-FRIENDLY              -->
     <!-- ========================================== -->
-    <section class="py-16 sm:py-24 bg-brand-deep border-t border-white/10">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-16 bg-brand-deep border-t border-white/10">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6">
         
-        <div class="text-center mb-12">
-          <span class="text-amber-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-2">TIRE SUAS DÚVIDAS</span>
-          <h2 class="text-2xl sm:text-4xl font-black text-white">
+        <div class="text-center mb-6">
+          <span class="text-amber-400 text-[10px] font-extrabold uppercase tracking-widest block mb-1">DÚVIDAS FREQUENTES</span>
+          <h2 class="text-xl sm:text-2xl font-black text-white">
             Perguntas Frequentes
           </h2>
         </div>
 
-        <div class="space-y-3.5">
+        <div class="space-y-2.5">
           
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
+          <details class="group bg-brand-dark/90 border border-white/10 rounded-xl p-3.5">
+            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-xs sm:text-sm select-none">
               <span>Como recebo o acesso ao material?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
+              <span class="text-amber-400 text-base transform group-open:rotate-45 transition">+</span>
             </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              O acesso é liberado de forma 100% imediata assim que seu pagamento for confirmado pela Cakto. Você receberá um e-mail com as instruções de download e também poderá acessar diretamente pelo WhatsApp e na página de agradecimento.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed mt-2 pt-2 border-t border-white/10">
+              O acesso é imediato assim que seu pagamento for confirmado pela Cakto. Você receberá o link por e-mail e na tela de agradecimento.
             </p>
           </details>
 
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
+          <details class="group bg-brand-dark/90 border border-white/10 rounded-xl p-3.5">
+            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-xs sm:text-sm select-none">
               <span>O pagamento é mensal ou único?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
+              <span class="text-amber-400 text-base transform group-open:rotate-45 transition">+</span>
             </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              É um pagamento ÚNICO de apenas R$ 27,90. Não é assinatura, não tem cobrança surpresa nem mensalidade. Você paga uma única vez e o material é seu para sempre.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed mt-2 pt-2 border-t border-white/10">
+              É um pagamento ÚNICO de apenas R$ 27,90. Não tem mensalidades nem cobranças extras.
             </p>
           </details>
 
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
-              <span>Eu nunca toquei violão. Vou conseguir aprender?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
+          <details class="group bg-brand-dark/90 border border-white/10 rounded-xl p-3.5">
+            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-xs sm:text-sm select-none">
+              <span>Eu nunca toquei violão. Vou conseguir?</span>
+              <span class="text-amber-400 text-base transform group-open:rotate-45 transition">+</span>
             </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              Sim, com certeza! O método foi criado especificamente para iniciantes completos. O grande diferencial é que usamos apenas 3 acordes que compartilham dedos de apoio (dedos âncora), evitando dores e facilitando a troca entre eles desde a primeira semana.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed mt-2 pt-2 border-t border-white/10">
+              Sim! O método foi desenhado exatamente para quem está no zero, usando a técnica dos Dedos Âncora que evita dores e facilita a troca de acordes.
             </p>
           </details>
 
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
-              <span>Preciso ter um violão de alta qualidade?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
+          <details class="group bg-brand-dark/90 border border-white/10 rounded-xl p-3.5">
+            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-xs sm:text-sm select-none">
+              <span>Posso estudar pelo celular?</span>
+              <span class="text-amber-400 text-base transform group-open:rotate-45 transition">+</span>
             </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              Não. Qualquer violão simples (com cordas de nylon ou de aço) que você tenha em casa, ou até mesmo um violão emprestado de um amigo ou familiar, é perfeito para você dar os primeiros passos.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed mt-2 pt-2 border-t border-white/10">
+              Sim! O material é digital em formato otimizado para celular, tablet ou computador. Você também pode imprimir se preferir.
             </p>
           </details>
 
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
-              <span>Posso estudar pelo celular ou tablet?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
+          <details class="group bg-brand-dark/90 border border-white/10 rounded-xl p-3.5">
+            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-xs sm:text-sm select-none">
+              <span>E se eu tiver dúvidas?</span>
+              <span class="text-amber-400 text-base transform group-open:rotate-45 transition">+</span>
             </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              Sim! Todo o material é digital e em formato otimizado para celulares, tablets e computadores. Você pode abrir e estudar onde quiser, inclusive sem internet, ou se preferir pode imprimir a apostila completa.
-            </p>
-          </details>
-
-          <details class="group bg-brand-dark/90 border border-white/10 rounded-2xl p-5 hover:border-amber-400/40 transition">
-            <summary class="flex justify-between items-center cursor-pointer font-bold text-white text-sm sm:text-base select-none">
-              <span>E se eu tiver dúvidas durante os estudos?</span>
-              <span class="text-amber-400 text-xl transform group-open:rotate-45 transition duration-200">+</span>
-            </summary>
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-3 pt-3 border-t border-white/10">
-              Dentro do material você encontrará nosso canal de suporte por e-mail e WhatsApp para tirar qualquer dúvida e te ajudar no que for necessário.
+            <p class="text-slate-300 text-[11px] sm:text-xs leading-relaxed mt-2 pt-2 border-t border-white/10">
+              Dentro do material você encontrará nosso canal de suporte por e-mail e WhatsApp para tirar qualquer dúvida.
             </p>
           </details>
 
         </div>
 
-        <div class="mt-12 text-center">
+        <div class="mt-8 text-center">
           <a 
             href="#oferta" 
-            class="cakto-btn inline-block bg-amber-400 hover:bg-amber-300 text-brand-dark font-black text-sm sm:text-base py-3.5 px-8 rounded-full shadow-lg transition active:scale-95"
+            class="cakto-btn inline-block bg-amber-400 hover:bg-amber-300 text-brand-dark font-black text-xs sm:text-sm py-3 px-6 rounded-full shadow transition"
           >
             QUERO MEU ACESSO POR R$ 27,90 🎸
           </a>
@@ -1283,73 +1086,69 @@
   <!-- ========================================== -->
   <!-- RODAPÉ INSTITUCIONAL                       -->
   <!-- ========================================== -->
-  <footer class="py-12 bg-brand-dark border-t border-white/10 text-slate-400 text-xs">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center space-y-6">
+  <footer class="py-8 bg-brand-dark border-t border-white/10 text-slate-400 text-[10px] sm:text-xs">
+    <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
       
-      <div class="flex items-center justify-center gap-2 font-serif font-black text-white text-base">
+      <div class="font-serif font-black text-white text-sm">
         🎸 LOUVOR EM 3 ACORDES
       </div>
 
-      <p class="max-w-xl mx-auto text-slate-400 leading-relaxed">
-        Método prático de violão desenvolvido para cristãos iniciantes que desejam adorar a Deus em família e no lar através da música.
+      <p class="text-slate-400 leading-relaxed max-w-md mx-auto">
+        Método prático de violão desenvolvido para cristãos iniciantes que desejam adorar a Deus em família e no lar.
       </p>
 
-      <div class="flex flex-wrap justify-center gap-6 font-medium text-slate-400">
-        <a href="#" class="hover:text-amber-400 transition">Termos de Uso</a>
-        <a href="#" class="hover:text-amber-400 transition">Política de Privacidade</a>
-        <a href="#" class="hover:text-amber-400 transition">Contato & Suporte</a>
+      <div class="flex justify-center gap-4 text-slate-400">
+        <a href="#" class="hover:text-amber-400 transition">Termos</a>
+        <a href="#" class="hover:text-amber-400 transition">Privacidade</a>
+        <a href="#" class="hover:text-amber-400 transition">Suporte</a>
       </div>
 
-      <p class="max-w-2xl mx-auto text-[11px] text-slate-500 leading-relaxed">
-        Aviso legal: Os resultados podem variar de acordo com o tempo de estudo, dedicação e prática de cada aluno. Este produto não possui vínculo oficial com nenhuma denominação religiosa específica ou gravadora musical.
-      </p>
-
-      <p class="text-[11px] text-slate-500">
+      <p class="text-[9px] text-slate-500">
         © <span id="year"></span> Método 3 Acordes. Todos os direitos reservados.
       </p>
 
     </div>
   </footer>
 
-  <!-- ========================================== -->
-  <!-- BARRA FIXA MOBILE (STICKY BOTTOM BAR)      -->
-  <!-- ========================================== -->
-  <div id="sticky-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-brand-deep/95 backdrop-blur-md border-t border-amber-400/30 p-3 sm:hidden transform translate-y-full transition-transform duration-300 shadow-2xl flex items-center justify-between gap-3">
-    <div>
-      <span class="text-[10px] text-slate-400 block leading-none">Oferta especial hoje</span>
-      <span class="text-lg font-black text-amber-400 leading-tight">R$ 27,90</span>
+  <!-- ======================================================= -->
+  <!-- BARRA FIXA MOBILE INFERIOR (STICKY BOTTOM BAR 56PX)     -->
+  <!-- ======================================================= -->
+  <aside id="sticky-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-brand-deep/95 backdrop-blur-lg border-t border-amber-400/35 p-3 sm:hidden transform translate-y-full transition-transform duration-300 shadow-mobile-bottom safe-bottom flex items-center justify-between gap-3">
+    <div class="min-w-0">
+      <span class="text-[9px] text-slate-300 block uppercase font-bold leading-none">Apenas hoje</span>
+      <span class="text-xl font-black text-amber-400 leading-tight">R$ 27,90</span>
+      <span class="text-[9px] text-emerald-400 block leading-none">Pagamento único</span>
     </div>
     <a 
       href="https://pay.cakto.com.br/wtd6not_1074745" 
-      class="cakto-btn flex-1 text-center bg-gradient-to-r from-amber-400 to-amber-500 text-brand-dark font-extrabold text-xs py-3 px-4 rounded-xl shadow uppercase tracking-tight"
+      class="cakto-btn btn-press flex-1 text-center bg-gradient-to-r from-amber-400 to-amber-500 text-brand-dark font-black text-xs py-3.5 px-3 rounded-xl shadow-lg uppercase tracking-tight shrink-0"
     >
-      QUERO MEU ACESSO 🎸
+      COMPRAR AGORA 🎸
     </a>
-  </div>
+  </aside>
 
   <!-- ========================================== -->
-  <!-- NOTIFICAÇÃO FLUTUANTE DE VENDA RECENTE     -->
+  <!-- TOAST DE COMPRA RECENTE (DESKTOP/MOBILE)   -->
   <!-- ========================================== -->
-  <div id="sales-toast" class="fixed bottom-4 left-4 z-40 max-w-xs bg-brand-deep/95 border border-amber-400/40 rounded-2xl p-3 shadow-2xl backdrop-blur-md transform -translate-x-full opacity-0 transition-all duration-500 flex items-center gap-3 hidden sm:flex">
-    <div class="w-9 h-9 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-sm shrink-0">
+  <div id="sales-toast" class="fixed bottom-20 sm:bottom-4 left-3 sm:left-4 z-40 max-w-[280px] sm:max-w-xs bg-brand-deep/95 border border-amber-400/40 rounded-xl p-2.5 shadow-2xl backdrop-blur-md transform -translate-x-full opacity-0 transition-all duration-500 flex items-center gap-2.5">
+    <div class="w-7 h-7 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">
       🔔
     </div>
     <div class="min-w-0 flex-1">
-      <p id="toast-name" class="text-xs font-bold text-white truncate">Marcos S. de São Paulo</p>
-      <p class="text-[11px] text-emerald-400 font-medium">Acabou de adquirir o método</p>
-      <span id="toast-time" class="text-[10px] text-slate-400">há 3 minutos</span>
+      <p id="toast-name" class="text-[11px] font-bold text-white truncate">Marcos S. de São Paulo</p>
+      <p class="text-[10px] text-emerald-400 font-medium">Acabou de adquirir o método</p>
     </div>
-    <button onclick="dismissToast()" class="text-slate-400 hover:text-white text-xs p-1">✕</button>
+    <button onclick="dismissToast()" class="text-slate-400 hover:text-white text-xs p-1" aria-label="Fechar notificação">✕</button>
   </div>
 
   <!-- ========================================== -->
-  <!-- SCRIPTS ESSENCIAIS: UTMs, CRONÔMETRO, TOAST-->
+  <!-- SCRIPTS: UTMs, CRONÔMETRO, TOAST, STICKY   -->
   <!-- ========================================== -->
   <script>
     // 1. Atualizar ano no rodapé
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // 2. Encaminhador dinâmico de UTMs para o checkout Cakto
+    // 2. Encaminhador dinâmico de UTMs para a Cakto
     (function forwardUtms() {
       const baseUrl = 'https://pay.cakto.com.br/wtd6not_1074745';
       const searchParams = window.location.search;
@@ -1364,7 +1163,6 @@
           btn.href = baseUrl;
         }
 
-        // Adiciona evento de InitiateCheckout no Facebook Pixel ao clicar
         btn.addEventListener('click', function() {
           if (typeof fbq === 'function') {
             fbq('track', 'InitiateCheckout', {
@@ -1377,17 +1175,15 @@
       });
     })();
 
-    // 3. Cronômetro regressivo elegante
+    // 3. Cronômetro regressivo dinâmico
     (function countdown() {
-      let duration = 3 * 3600 + 42 * 60 + 19; // 3h 42m 19s
+      let duration = 3 * 3600 + 42 * 60 + 19;
       const hoursEl = document.getElementById('timer-hours');
       const minutesEl = document.getElementById('timer-minutes');
       const secondsEl = document.getElementById('timer-seconds');
 
       setInterval(() => {
-        if (duration <= 0) {
-          duration = 4 * 3600; // reinicia ciclo
-        }
+        if (duration <= 0) duration = 4 * 3600;
         duration--;
 
         const h = Math.floor(duration / 3600);
@@ -1400,28 +1196,33 @@
       }, 1000);
     })();
 
-    // 4. Barra fixa mobile ao rolar
+    // 4. Barra fixa mobile ao rolar a tela
     (function stickyBar() {
       const bar = document.getElementById('sticky-bar');
+      const ofertaSection = document.getElementById('oferta');
       if (!bar) return;
 
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 400) {
+        const scrollY = window.scrollY;
+        const ofertaTop = ofertaSection ? ofertaSection.offsetTop - 300 : Infinity;
+        
+        // Exibe quando passar de 250px e esconde quando chegar perto da caixa de oferta para não poluir
+        if (scrollY > 250 && scrollY < ofertaTop) {
           bar.classList.remove('translate-y-full');
         } else {
           bar.classList.add('translate-y-full');
         }
-      });
+      }, { passive: true });
     })();
 
     // 5. Toast de vendas recentes rotativo
     const recentBuyers = [
-      { name: 'Ricardo M. de Belo Horizonte/MG', time: 'há 2 minutos' },
-      { name: 'Ana Paula S. de Curitiba/PR', time: 'há 4 minutos' },
-      { name: 'Pr. Carlos E. do Rio de Janeiro/RJ', time: 'há 6 minutos' },
-      { name: 'Maria das Graças de Goiânia/GO', time: 'há 8 minutos' },
-      { name: 'Lucas F. de Salvador/BA', time: 'há 11 minutos' },
-      { name: 'Débora T. de Campinas/SP', time: 'há 14 minutos' }
+      { name: 'Ricardo M. de Belo Horizonte/MG' },
+      { name: 'Ana Paula S. de Curitiba/PR' },
+      { name: 'Pr. Carlos E. do Rio de Janeiro/RJ' },
+      { name: 'Maria das Graças de Goiânia/GO' },
+      { name: 'Lucas F. de Salvador/BA' },
+      { name: 'Débora T. de Campinas/SP' }
     ];
 
     let buyerIdx = 0;
@@ -1435,14 +1236,13 @@
       buyerIdx++;
 
       document.getElementById('toast-name').textContent = buyer.name;
-      document.getElementById('toast-time').textContent = buyer.time;
 
       toast.classList.remove('-translate-x-full', 'opacity-0');
 
       setTimeout(() => {
         toast.classList.add('-translate-x-full', 'opacity-0');
-        toastTimeout = setTimeout(showNextToast, 14000);
-      }, 5000);
+        toastTimeout = setTimeout(showNextToast, 16000);
+      }, 4500);
     }
 
     function dismissToast() {
@@ -1453,8 +1253,7 @@
       }
     }
 
-    // Inicia toast após 6 segundos
-    setTimeout(showNextToast, 6000);
+    setTimeout(showNextToast, 5000);
   </script>
 </body>
 </html>
