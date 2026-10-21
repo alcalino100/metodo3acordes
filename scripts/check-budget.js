@@ -7,6 +7,7 @@ const rootDir = path.resolve(__dirname, "..");
 
 const BUDGETS = {
   "index.html": 120 * 1024, // 120 KB uncompressed HTML budget
+  "admin/index.html": 80 * 1024, // 80 KB uncompressed Admin HTML budget
   assetsTotal: 5 * 1024 * 1024, // 5 MB assets budget
 };
 
@@ -33,7 +34,25 @@ if (fs.existsSync(htmlPath)) {
   hasErrors = true;
 }
 
-// 2. Check total assets size
+// 2. Check admin/index.html size
+const adminPath = path.join(rootDir, "admin", "index.html");
+if (fs.existsSync(adminPath)) {
+  const stat = fs.statSync(adminPath);
+  const sizeKB = (stat.size / 1024).toFixed(2);
+  const limitKB = (BUDGETS["admin/index.html"] / 1024).toFixed(0);
+  if (stat.size > BUDGETS["admin/index.html"]) {
+    console.error(
+      `❌ Performance Budget FAILED: admin/index.html is ${sizeKB} KB (Limit: ${limitKB} KB)`,
+    );
+    hasErrors = true;
+  } else {
+    console.log(
+      `✅ Performance Budget PASSED: admin/index.html is ${sizeKB} KB (Limit: ${limitKB} KB)`,
+    );
+  }
+}
+
+// 3. Check total assets size
 const assetsDir = path.join(rootDir, "assets");
 if (fs.existsSync(assetsDir)) {
   let totalAssetSize = 0;

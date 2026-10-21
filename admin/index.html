@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#021812">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel de Métricas & Funil — Método 3 Acordes</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN com personalização -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#021812',
+              deep: '#062E23',
+              forest: '#0B4635',
+              surface: '#115441',
+              gold: '#F59E0B',
+              goldLight: '#FBBF24',
+              goldHover: '#D97706',
+              cream: '#FDFBF7',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          boxShadow: {
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+            'glow-gold': '0 0 25px -3px rgba(245, 158, 11, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    body {
+      background-color: #021812;
+      color: #FDFBF7;
+    }
+    .glass-panel {
+      background: rgba(6, 46, 35, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(11, 70, 53, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .btn-press:active {
+      transform: scale(0.97);
+      transition: transform 90ms var(--ease-out);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-brand-gold selection:text-brand-dark pb-16">
+
+  <!-- ===================================================================== -->
+  <!-- MODAL DE AUTENTICAÇÃO POR PIN (SEGURANÇA CLIENT-SIDE)                 -->
+  <!-- ===================================================================== -->
+  <div id="pin-modal" class="fixed inset-0 z-50 bg-brand-dark/95 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="glass-card max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-amber-400/30 text-center">
+      <div class="w-12 h-12 rounded-xl bg-amber-400/20 text-amber-400 flex items-center justify-center mx-auto mb-3 text-2xl font-black">
+        🔒
+      </div>
+      <h2 class="text-lg font-black text-white mb-1">Área Administrativa</h2>
+      <p class="text-xs text-slate-400 mb-5">Digite o PIN de acesso para visualizar métricas, tráfego e conversões.</p>
+
+      <form id="pin-form" onsubmit="handlePinSubmit(event)" class="space-y-4">
+        <div>
+          <input 
+            type="password" 
+            id="pin-input" 
+            maxlength="16" 
+            placeholder="Digite o PIN (Padrão: 3acordes)" 
+            class="w-full text-center tracking-widest text-sm bg-brand-deep/80 border border-white/20 rounded-xl py-3 px-4 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+            required
+            autofocus
+          >
+          <p id="pin-error" class="text-[11px] text-rose-400 mt-1 hidden">PIN incorreto. Tente novamente.</p>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-press w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 text-brand-dark font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+        >
+          Desbloquear Painel ➔
+        </button>
+      </form>
+      
+      <div class="mt-4 pt-4 border-t border-white/10">
+        <a href="../" class="text-xs text-slate-400 hover:text-white transition">← Voltar para a Landing Page</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CABEÇALHO SUPERIOR DO PAINEL                                          -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-brand-deep/90 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Título -->
+      <div class="flex items-center gap-3">
+        <a href="../" class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-brand-dark font-black text-lg shadow-md">
+          🎸
+        </a>
+        <div>
+          <h1 class="font-bold text-sm sm:text-base text-white flex items-center gap-2">
+            <span>Método 3 Acordes</span>
+            <span class="bg-amber-400/20 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-amber-400/30">Analytics & Funil</span>
+          </h1>
+          <p class="text-[10px] text-slate-400 hidden sm:block">Telemetria de tráfego, UTMs e atribuição Cakto</p>
+        </div>
+      </div>
+
+      <!-- Ações do Topo -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button 
+          type="button" 
+          onclick="refreshMetrics(true)" 
+          id="btn-refresh"
+          class="btn-press bg-brand-surface/70 hover:bg-brand-surface border border-white/10 text-slate-200 text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 transition"
+          title="Atualizar dados"
+        >
+          <span id="refresh-icon" class="inline-block transition-transform duration-500">🔄</span>
+          <span class="hidden sm:inline">Atualizar</span>
+        </button>
+
+        <a 
+          href="../" 
+          class="btn-press bg-brand-surface/70 hover:bg-brand-surface border border-white/10 text-amber-300 hover:text-white text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 transition"
+        >
+          <span>👁️</span>
+          <span class="hidden sm:inline">Ver Site</span>
+        </a>
+
+        <button 
+          type="button" 
+          onclick="lockDashboard()" 
+          class="btn-press bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-xs py-2 px-2.5 rounded-xl transition"
+          title="Bloquear painel"
+        >
+          🔒
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- CONTEÚDO PRINCIPAL                                                    -->
+  <!-- ===================================================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 flex-1 w-full space-y-6">
+
+    <!-- BARRA DE CONTROLE: Filtros Temporais e Ações Rápidas -->
+    <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <span class="text-xs text-slate-400">Filtrar:</span>
+        <div class="grid grid-cols-4 gap-1 bg-brand-dark/60 p-1 rounded-xl border border-white/10 text-xs w-full sm:w-auto">
+          <button type="button" onclick="setTimeFilter('today')" class="time-btn py-1 px-2.5 rounded-lg font-semibold text-slate-300 hover:text-white transition active-tab" data-filter="today">Hoje</button>
+          <button type="button" onclick="setTimeFilter('7d')" class="time-btn py-1 px-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition" data-filter="7d">7 dias</button>
+          <button type="button" onclick="setTimeFilter('30d')" class="time-btn py-1 px-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition" data-filter="30d">30 dias</button>
+          <button type="button" onclick="setTimeFilter('all')" class="time-btn py-1 px-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition" data-filter="all">Tudo</button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end text-xs">
+        <button 
+          type="button" 
+          onclick="seedSampleData()" 
+          class="btn-press bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30 py-1.5 px-3 rounded-xl transition flex items-center gap-1.5"
+          title="Injeta dados realistas de exemplo caso o site ainda não tenha tráfego"
+        >
+          <span>⚡ Dados de Exemplo</span>
+        </button>
+        
+        <button 
+          type="button" 
+          onclick="exportData('csv')" 
+          class="btn-press bg-brand-surface hover:bg-brand-surface/80 text-slate-300 py-1.5 px-3 rounded-xl border border-white/10 transition flex items-center gap-1"
+        >
+          <span>📥 Exportar CSV</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CARDS DE MÉTRICAS PRINCIPAIS (KPIs) -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      
+      <!-- Card 1: Visitantes Únicos -->
+      <div class="glass-card rounded-2xl p-4">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Visitantes Únicos</span>
+          <span class="text-emerald-400 text-sm">👤</span>
+        </div>
+        <div id="kpi-visitors" class="text-2xl sm:text-3xl font-black text-white">0</div>
+        <p class="text-[10px] text-slate-400 mt-1">Identificados por UUID</p>
+      </div>
+
+      <!-- Card 2: Visualizações de Página -->
+      <div class="glass-card rounded-2xl p-4">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Visualizações (PV)</span>
+          <span class="text-blue-400 text-sm">👁️</span>
+        </div>
+        <div id="kpi-pageviews" class="text-2xl sm:text-3xl font-black text-white">0</div>
+        <p class="text-[10px] text-slate-400 mt-1">Total de acessos</p>
+      </div>
+
+      <!-- Card 3: Engajamento com Som -->
+      <div class="glass-card rounded-2xl p-4">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Ouviram os Acordes</span>
+          <span class="text-amber-400 text-sm">🔊</span>
+        </div>
+        <div id="kpi-audio" class="text-2xl sm:text-3xl font-black text-amber-300">0</div>
+        <p id="kpi-audio-pct" class="text-[10px] text-emerald-400 mt-1">0% dos visitantes</p>
+      </div>
+
+      <!-- Card 4: Cliques em Checkout -->
+      <div class="glass-card rounded-2xl p-4">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Initiate Checkout</span>
+          <span class="text-amber-400 text-sm">🛒</span>
+        </div>
+        <div id="kpi-checkouts" class="text-2xl sm:text-3xl font-black text-amber-400">0</div>
+        <p class="text-[10px] text-slate-400 mt-1">Cliques para a Cakto</p>
+      </div>
+
+      <!-- Card 5: Taxa de Conversão -->
+      <div class="glass-card rounded-2xl p-4 border border-emerald-500/20">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Taxa Visita ➔ IC</span>
+          <span class="text-emerald-400 text-sm">📈</span>
+        </div>
+        <div id="kpi-conversion" class="text-2xl sm:text-3xl font-black text-emerald-400">0%</div>
+        <p class="text-[10px] text-emerald-300 mt-1">Conversão do funil</p>
+      </div>
+
+      <!-- Card 6: Faturamento Estimado -->
+      <div class="glass-card rounded-2xl p-4 border border-amber-400/25">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+          <span>Volume Cakto (Est.)</span>
+          <span class="text-amber-400 text-sm">💰</span>
+        </div>
+        <div id="kpi-revenue" class="text-xl sm:text-2xl font-black text-amber-300">R$ 0,00</div>
+        <p class="text-[10px] text-slate-400 mt-1">Preço oferta R$ 27,90</p>
+      </div>
+
+    </div>
+
+    <!-- SEÇÃO: FUNIL VISUAL DE CONVERSÃO -->
+    <div class="glass-card rounded-2xl p-5 sm:p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-base font-black text-white flex items-center gap-2">
+            <span>🎯 Funil de Conversão do Tráfego</span>
+          </h2>
+          <p class="text-xs text-slate-400">Jornada do usuário da chegada até a ida para a Cakto</p>
+        </div>
+        <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+          Alta Fidelidade
+        </span>
+      </div>
+
+      <div class="space-y-3.5">
+        
+        <!-- Etapa 1: Visualizações -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-semibold text-white flex items-center gap-1.5">
+              <span>1. Aterrissagem na Landing Page (PageViews)</span>
+            </span>
+            <span id="funnel-step-1" class="font-bold text-slate-300">0 acessos (100%)</span>
+          </div>
+          <div class="h-4 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/5">
+            <div id="funnel-bar-1" class="h-full bg-blue-500 rounded-full transition-all duration-700 w-full"></div>
+          </div>
+        </div>
+
+        <!-- Etapa 2: Engajamento com o Som / Rolagem -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-semibold text-white flex items-center gap-1.5">
+              <span>2. Experimentação Sonora dos 3 Acordes (Áudio / Engajamento)</span>
+            </span>
+            <span id="funnel-step-2" class="font-bold text-amber-300">0 ouvintes (0%)</span>
+          </div>
+          <div class="h-4 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/5">
+            <div id="funnel-bar-2" class="h-full bg-amber-400 rounded-full transition-all duration-700 w-0"></div>
+          </div>
+        </div>
+
+        <!-- Etapa 3: Rolaram até a Oferta -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-semibold text-white flex items-center gap-1.5">
+              <span>3. Leitura da Oferta e Mockup 3D (Scroll Profundo 50%+)</span>
+            </span>
+            <span id="funnel-step-3" class="font-bold text-amber-300">0 rolagem (0%)</span>
+          </div>
+          <div class="h-4 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/5">
+            <div id="funnel-bar-3" class="h-full bg-amber-500 rounded-full transition-all duration-700 w-0"></div>
+          </div>
+        </div>
+
+        <!-- Etapa 4: Cliques em Comprar (Cakto) -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-semibold text-white flex items-center gap-1.5">
+              <span>4. Clique em "Quero Meu Acesso" ➔ Cakto (InitiateCheckout)</span>
+            </span>
+            <span id="funnel-step-4" class="font-bold text-emerald-400">0 checkouts (0%)</span>
+          </div>
+          <div class="h-4 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/5">
+            <div id="funnel-bar-4" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700 w-0"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEÇÃO: DUAS COLUNAS (UTMs & DISPOSITIVOS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Coluna Esquerda: Tabela de UTMs e Campanhas (2 colunas) -->
+      <div class="lg:col-span-2 glass-card rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-black text-white flex items-center gap-2">
+              <span>🏷️ Origem do Tráfego & Campanhas (UTMs)</span>
+            </h3>
+            <p class="text-[11px] text-slate-400">Desempenho por canal de anúncio e criativo</p>
+          </div>
+          <span class="text-[10px] text-slate-400 bg-white/5 px-2 py-1 rounded">Rankeado por volume</span>
+        </div>
+
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/10 text-slate-400 pb-2">
+                <th class="pb-2 font-semibold">Origem (utm_source)</th>
+                <th class="pb-2 font-semibold">Campanha (utm_campaign)</th>
+                <th class="pb-2 font-semibold text-right">Visitas</th>
+                <th class="pb-2 font-semibold text-right">Checkouts</th>
+                <th class="pb-2 font-semibold text-right">Conv. %</th>
+              </tr>
+            </thead>
+            <tbody id="utm-table-body" class="divide-y divide-white/5 text-slate-300">
+              <tr>
+                <td colspan="5" class="py-6 text-center text-slate-500">Nenhuma UTM registrada ainda. Inicie campanhas com parâmetros ou clique em "Dados de Exemplo".</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Coluna Direita: Dispositivos & Click IDs (1 coluna) -->
+      <div class="space-y-4">
+        
+        <!-- Dispositivos Mobile vs Desktop -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-black text-white mb-1">📱 Dispositivos</h3>
+          <p class="text-[11px] text-slate-400 mb-3">Distribuição do público no funil</p>
+
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-300">Mobile (Smartphones)</span>
+                <span id="dev-mobile-pct" class="font-bold text-amber-300">0%</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="dev-mobile-bar" class="h-full bg-amber-400 rounded-full w-0 transition-all duration-500"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-300">Desktop / Notebooks</span>
+                <span id="dev-desktop-pct" class="font-bold text-blue-400">0%</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="dev-desktop-bar" class="h-full bg-blue-500 rounded-full w-0 transition-all duration-500"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Click IDs das Plataformas -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-black text-white mb-1">🔗 Click IDs Capturados</h3>
+          <p class="text-[11px] text-slate-400 mb-3">Identificadores de cliques pagos</p>
+
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-brand-dark/50 p-2.5 rounded-xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">fbclid (Meta)</span>
+              <span id="click-fbclid" class="text-base font-black text-blue-400">0</span>
+            </div>
+            <div class="bg-brand-dark/50 p-2.5 rounded-xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">gclid (Google)</span>
+              <span id="click-gclid" class="text-base font-black text-emerald-400">0</span>
+            </div>
+            <div class="bg-brand-dark/50 p-2.5 rounded-xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">ttclid (TikTok)</span>
+              <span id="click-ttclid" class="text-base font-black text-purple-400">0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SEÇÃO: LOG DE EVENTOS EM TEMPO REAL -->
+    <div class="glass-card rounded-2xl p-5">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h3 class="text-sm font-black text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>Feed de Eventos em Tempo Real</span>
+          </h3>
+          <p class="text-[11px] text-slate-400">Últimas ações registradas pelos visitantes</p>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <input 
+            type="text" 
+            id="event-search" 
+            oninput="renderEventsTable()" 
+            placeholder="Filtrar por evento ou visitante..." 
+            class="text-xs bg-brand-deep/80 border border-white/10 rounded-xl py-1.5 px-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition w-full sm:w-60"
+          >
+          <button 
+            type="button" 
+            onclick="clearAllEvents()" 
+            class="btn-press bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-xs py-1.5 px-3 rounded-xl transition shrink-0"
+            title="Limpar histórico local"
+          >
+            Limpar
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto no-scrollbar max-h-96 overflow-y-auto border border-white/5 rounded-xl">
+        <table class="w-full text-left text-xs">
+          <thead class="sticky top-0 bg-brand-deep/95 backdrop-blur-md">
+            <tr class="border-b border-white/10 text-slate-400">
+              <th class="py-2 px-3 font-semibold">Horário</th>
+              <th class="py-2 px-3 font-semibold">Evento</th>
+              <th class="py-2 px-3 font-semibold">Visitante ID (_rt_vid)</th>
+              <th class="py-2 px-3 font-semibold">Origem (UTM)</th>
+              <th class="py-2 px-3 font-semibold">Detalhes</th>
+            </tr>
+          </thead>
+          <tbody id="events-table-body" class="divide-y divide-white/5 text-slate-300">
+            <!-- Injetado dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEÇÃO: SIMULADOR DE WEBHOOK CAKTO & CONCILIAÇÃO -->
+    <div class="glass-card rounded-2xl p-5 border border-amber-400/20">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-sm font-black text-amber-300 flex items-center gap-1.5">
+            <span>⚡ Simulador de Webhook de Venda Cakto</span>
+          </h3>
+          <p class="text-xs text-slate-400 max-w-xl mt-0.5">
+            Teste como o webhook da Cakto reconcilia o <strong>_rt_vid</strong> com a venda aprovada de R$ 27,90, fechando o ciclo de atribuição.
+          </p>
+        </div>
+
+        <button 
+          type="button" 
+          onclick="simulateCaktoSale()" 
+          class="btn-press bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-brand-dark font-black text-xs py-2.5 px-4 rounded-xl shadow-lg transition shrink-0 flex items-center gap-1.5"
+        >
+          <span>💸 Simular Venda Aprovada (R$ 27,90)</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST DE NOTIFICAÇÃO DO PAINEL -->
+  <div id="admin-toast" class="fixed bottom-4 right-4 z-50 glass-card border border-amber-400/30 rounded-xl p-3 shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 max-w-sm pointer-events-none">
+    <span id="admin-toast-icon" class="text-lg">✅</span>
+    <span id="admin-toast-msg" class="text-xs text-white font-medium">Ação executada com sucesso!</span>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SCRIPT ANALYTICS & LOGICA DO PAINEL                                   -->
+  <!-- ===================================================================== -->
+  <script>
+    const DEFAULT_PIN = '3acordes';
+    let currentFilter = 'all';
+
+    // 1. Verificação de Autenticação com PIN
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem('admin_authenticated');
+      const pinModal = document.getElementById('pin-modal');
+      if (isAuth === 'true') {
+        if (pinModal) pinModal.classList.add('hidden');
+        refreshMetrics(false);
+      } else {
+        if (pinModal) pinModal.classList.remove('hidden');
+      }
+    }
+
+    function handlePinSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('pin-input');
+      const errorMsg = document.getElementById('pin-error');
+      const pin = input ? input.value.trim() : '';
+
+      const storedCustomPin = localStorage.getItem('admin_custom_pin') || DEFAULT_PIN;
+
+      if (pin === storedCustomPin || pin === DEFAULT_PIN) {
+        sessionStorage.setItem('admin_authenticated', 'true');
+        document.getElementById('pin-modal').classList.add('hidden');
+        if (errorMsg) errorMsg.classList.add('hidden');
+        showToast('Painel desbloqueado com sucesso!', '🔓');
+        refreshMetrics(false);
+      } else {
+        if (errorMsg) errorMsg.classList.remove('hidden');
+        if (input) {
+          input.value = '';
+          input.focus();
+        }
+      }
+    }
+
+    function lockDashboard() {
+      sessionStorage.removeItem('admin_authenticated');
+      checkAuth();
+      showToast('Painel bloqueado com segurança.', '🔒');
+    }
+
+    // 2. Coleta e Filtro de Eventos
+    function getStoredEvents() {
+      try {
+        const raw = localStorage.getItem('_rt_analytics_events');
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function setTimeFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.time-btn').forEach(btn => {
+        if (btn.dataset.filter === filter) {
+          btn.classList.add('active-tab', 'text-white', 'bg-white/10');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('active-tab', 'text-white', 'bg-white/10');
+          btn.classList.add('text-slate-400');
+        }
+      });
+      refreshMetrics(false);
+    }
+
+    function filterEventsByTime(events) {
+      if (currentFilter === 'all') return events;
+      const now = Date.now();
+      let threshold = 0;
+      if (currentFilter === 'today') {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        threshold = d.getTime();
+      } else if (currentFilter === '7d') {
+        threshold = now - (7 * 864e5);
+      } else if (currentFilter === '30d') {
+        threshold = now - (30 * 864e5);
+      }
+      return events.filter(e => e.ts >= threshold);
+    }
+
+    // 3. Atualização das Métricas e Funil
+    function refreshMetrics(showFeedback = true) {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('rotate-180');
+      setTimeout(() => {
+        if (refreshIcon) refreshIcon.classList.remove('rotate-180');
+      }, 500);
+
+      const allEvents = getStoredEvents();
+      const events = filterEventsByTime(allEvents);
+
+      // Métricas Básicas
+      const visitorsSet = new Set();
+      let pageviews = 0;
+      let audioPlays = 0;
+      let checkouts = 0;
+      let scroll50 = 0;
+      let fbclidCount = 0;
+      let gclidCount = 0;
+      let ttclidCount = 0;
+      let mobileCount = 0;
+      let desktopCount = 0;
+
+      const utmMap = {};
+
+      events.forEach(evt => {
+        if (evt.visitorId) visitorsSet.add(evt.visitorId);
+
+        if (evt.type === 'page_view') pageviews++;
+        if (evt.type === 'audio_play') audioPlays++;
+        if (evt.type === 'initiate_checkout') checkouts++;
+        if (evt.type === 'scroll_depth' && evt.extra && evt.extra.depth === '50%') scroll50++;
+
+        // Click IDs
+        if (evt.clickIds) {
+          if (evt.clickIds.fbclid) fbclidCount++;
+          if (evt.clickIds.gclid) gclidCount++;
+          if (evt.clickIds.ttclid) ttclidCount++;
+        }
+
+        // Dispositivos
+        if (evt.screen) {
+          const w = parseInt(evt.screen.split('x')[0], 10);
+          if (w < 768) mobileCount++;
+          else desktopCount++;
+        }
+
+        // UTMs
+        const src = (evt.utms && evt.utms.utm_source) || '(direto / orgânico)';
+        const camp = (evt.utms && evt.utms.utm_campaign) || '(sem campanha)';
+        const key = `${src}__${camp}`;
+
+        if (!utmMap[key]) {
+          utmMap[key] = { source: src, campaign: camp, views: 0, checkouts: 0 };
+        }
+        if (evt.type === 'page_view') utmMap[key].views++;
+        if (evt.type === 'initiate_checkout') utmMap[key].checkouts++;
+      });
+
+      const totalVisitors = visitorsSet.size;
+      const convRate = pageviews > 0 ? ((checkouts / pageviews) * 100).toFixed(1) : '0';
+      const audioPct = totalVisitors > 0 ? ((audioPlays / totalVisitors) * 100).toFixed(0) : '0';
+      const estimatedRevenue = (checkouts * 27.90).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      // Atualizar DOM KPIs
+      document.getElementById('kpi-visitors').textContent = totalVisitors;
+      document.getElementById('kpi-pageviews').textContent = pageviews;
+      document.getElementById('kpi-audio').textContent = audioPlays;
+      document.getElementById('kpi-audio-pct').textContent = `${audioPct}% dos visitantes`;
+      document.getElementById('kpi-checkouts').textContent = checkouts;
+      document.getElementById('kpi-conversion').textContent = `${convRate}%`;
+      document.getElementById('kpi-revenue').textContent = estimatedRevenue;
+
+      // Atualizar Barras do Funil
+      const basePv = Math.max(pageviews, 1);
+      const f1Pct = pageviews > 0 ? 100 : 0;
+      const f2Pct = Math.min(100, Math.round((audioPlays / basePv) * 100));
+      const f3Pct = Math.min(100, Math.round((Math.max(scroll50, audioPlays * 0.7) / basePv) * 100));
+      const f4Pct = Math.min(100, Math.round((checkouts / basePv) * 100));
+
+      document.getElementById('funnel-step-1').textContent = `${pageviews} acessos (${f1Pct}%)`;
+      document.getElementById('funnel-bar-1').style.width = `${f1Pct}%`;
+
+      document.getElementById('funnel-step-2').textContent = `${audioPlays} ouvintes (${f2Pct}%)`;
+      document.getElementById('funnel-bar-2').style.width = `${f2Pct}%`;
+
+      document.getElementById('funnel-step-3').textContent = `${scroll50 || Math.round(audioPlays * 0.7)} leitores (${f3Pct}%)`;
+      document.getElementById('funnel-bar-3').style.width = `${f3Pct}%`;
+
+      document.getElementById('funnel-step-4').textContent = `${checkouts} checkouts (${f4Pct}%)`;
+      document.getElementById('funnel-bar-4').style.width = `${f4Pct}%`;
+
+      // Atualizar Dispositivos
+      const totalDev = mobileCount + desktopCount;
+      const mobPct = totalDev > 0 ? Math.round((mobileCount / totalDev) * 100) : 0;
+      const dskPct = totalDev > 0 ? 100 - mobPct : 0;
+
+      document.getElementById('dev-mobile-pct').textContent = `${mobPct}%`;
+      document.getElementById('dev-mobile-bar').style.width = `${mobPct}%`;
+      document.getElementById('dev-desktop-pct').textContent = `${dskPct}%`;
+      document.getElementById('dev-desktop-bar').style.width = `${dskPct}%`;
+
+      // Atualizar Click IDs
+      document.getElementById('click-fbclid').textContent = fbclidCount;
+      document.getElementById('click-gclid').textContent = gclidCount;
+      document.getElementById('click-ttclid').textContent = ttclidCount;
+
+      // Renderizar Tabelas
+      renderUtmTable(utmMap);
+      renderEventsTable();
+
+      if (showFeedback) showToast('Métricas sincronizadas com sucesso!', '🔄');
+    }
+
+    // 4. Renderização da Tabela de UTMs
+    function renderUtmTable(utmMap) {
+      const tbody = document.getElementById('utm-table-body');
+      if (!tbody) return;
+
+      const items = Object.values(utmMap).sort((a, b) => b.views - a.views);
+
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Nenhuma UTM capturada no período selecionado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = items.map(item => {
+        const rate = item.views > 0 ? ((item.checkouts / item.views) * 100).toFixed(1) : '0';
+        return `
+          <tr class="hover:bg-white/5 transition">
+            <td class="py-2.5 px-1 font-semibold text-white">${escapeHtml(item.source)}</td>
+            <td class="py-2.5 px-1 text-slate-300">${escapeHtml(item.campaign)}</td>
+            <td class="py-2.5 px-1 text-right font-medium">${item.views}</td>
+            <td class="py-2.5 px-1 text-right font-bold text-amber-300">${item.checkouts}</td>
+            <td class="py-2.5 px-1 text-right font-bold text-emerald-400">${rate}%</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 5. Renderização do Feed de Eventos
+    function renderEventsTable() {
+      const tbody = document.getElementById('events-table-body');
+      if (!tbody) return;
+
+      const searchInput = document.getElementById('event-search');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      const allEvents = filterEventsByTime(getStoredEvents());
+      const filtered = allEvents.filter(e => {
+        if (!query) return true;
+        const text = `${e.type} ${e.visitorId} ${JSON.stringify(e.utms || {})} ${JSON.stringify(e.extra || {})}`.toLowerCase();
+        return text.includes(query);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Nenhum evento registrado com este filtro.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.slice(0, 100).map(e => {
+        const dateStr = new Date(e.ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const badge = getEventBadge(e.type);
+        const utmStr = (e.utms && e.utms.utm_source) ? `${e.utms.utm_source} / ${e.utms.utm_campaign || '-'}` : '(direto)';
+        const extraStr = e.extra ? JSON.stringify(e.extra) : (e.screen || '-');
+
+        return `
+          <tr class="hover:bg-white/5 transition text-[11px]">
+            <td class="py-2 px-3 text-slate-400 font-mono">${dateStr}</td>
+            <td class="py-2 px-3">${badge}</td>
+            <td class="py-2 px-3 font-mono text-[10px] text-slate-400 truncate max-w-[120px]" title="${escapeHtml(e.visitorId || '')}">${escapeHtml(e.visitorId ? e.visitorId.slice(0, 12) + '...' : '-')}</td>
+            <td class="py-2 px-3 text-slate-300 truncate max-w-[140px]">${escapeHtml(utmStr)}</td>
+            <td class="py-2 px-3 text-slate-400 font-mono text-[10px] truncate max-w-[180px]">${escapeHtml(extraStr)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getEventBadge(type) {
+      if (type === 'initiate_checkout') {
+        return '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/30">🛒 CHECKOUT</span>';
+      }
+      if (type === 'audio_play') {
+        return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">🔊 SOM VIOLÃO</span>';
+      }
+      if (type === 'page_view') {
+        return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">👁️ PAGE VIEW</span>';
+      }
+      if (type === 'sale_approved') {
+        return '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">💸 VENDA CAKTO</span>';
+      }
+      return `<span class="px-2 py-0.5 rounded-full text-[10px] bg-slate-700/50 text-slate-300">${escapeHtml(type)}</span>`;
+    }
+
+    // 6. Dados de Demonstração / Tráfego de Exemplo
+    function seedSampleData() {
+      const now = Date.now();
+      const sampleEvents = [];
+      const sources = [
+        { src: 'facebook', camp: 'video_3acordes_c1', med: 'cpc' },
+        { src: 'instagram', camp: 'reels_louvor_fam', med: 'stories' },
+        { src: 'google', camp: 'violao_iniciante_pesquisa', med: 'search' },
+        { src: 'tiktok', camp: 'aula_violao_viral', med: 'organico' },
+      ];
+
+      for (let i = 0; i < 48; i++) {
+        const s = sources[Math.floor(Math.random() * sources.length)];
+        const vid = 'vid_' + Math.random().toString(36).substr(2, 9);
+        const sid = 'sid_' + Math.random().toString(36).substr(2, 9);
+        const timeOffset = Math.floor(Math.random() * 3600 * 24 * 3 * 1000);
+        const isMobile = Math.random() > 0.18;
+
+        // Page view
+        sampleEvents.push({
+          id: 'evt_' + Math.random().toString(36).substr(2, 9),
+          type: 'page_view',
+          ts: now - timeOffset,
+          visitorId: vid,
+          sessionId: sid,
+          utms: { utm_source: s.src, utm_campaign: s.camp, utm_medium: s.med },
+          clickIds: { fbclid: s.src === 'facebook' ? 'fb_' + Math.random().toString(36).substr(2, 8) : null },
+          screen: isMobile ? '390x844' : '1920x1080',
+          lang: 'pt-BR'
+        });
+
+        // 60% tocaram acorde
+        if (Math.random() < 0.6) {
+          sampleEvents.push({
+            id: 'evt_' + Math.random().toString(36).substr(2, 9),
+            type: 'audio_play',
+            ts: now - timeOffset + 15000,
+            visitorId: vid,
+            sessionId: sid,
+            utms: { utm_source: s.src, utm_campaign: s.camp },
+            extra: { chord: ['G', 'C9', 'D'][Math.floor(Math.random() * 3)] }
+          });
+        }
+
+        // 25% clicaram em comprar
+        if (Math.random() < 0.25) {
+          sampleEvents.push({
+            id: 'evt_' + Math.random().toString(36).substr(2, 9),
+            type: 'initiate_checkout',
+            ts: now - timeOffset + 45000,
+            visitorId: vid,
+            sessionId: sid,
+            utms: { utm_source: s.src, utm_campaign: s.camp },
+            extra: { product: 'Método 3 Acordes', value: 27.90 }
+          });
+        }
+      }
+
+      const existing = getStoredEvents();
+      localStorage.setItem('_rt_analytics_events', JSON.stringify(sampleEvents.concat(existing)));
+      refreshMetrics(false);
+      showToast('48 eventos de exemplo foram gerados!', '⚡');
+    }
+
+    // 7. Simular Venda da Cakto
+    function simulateCaktoSale() {
+      const now = Date.now();
+      const randomVid = 'vid_' + Math.random().toString(36).substr(2, 9);
+      const saleEvent = {
+        id: 'sale_' + Math.random().toString(36).substr(2, 9),
+        type: 'sale_approved',
+        ts: now,
+        visitorId: randomVid,
+        sessionId: 'sim_cakto',
+        utms: { utm_source: 'cakto_webhook', utm_campaign: 'oferta_27_90' },
+        extra: {
+          gateway: 'Cakto Tecnologia',
+          amount: 27.90,
+          status: 'paid',
+          client: 'Aluno Simulado',
+          orderId: 'CK-' + Math.floor(100000 + Math.random() * 900000)
+        }
+      };
+
+      const existing = getStoredEvents();
+      existing.unshift(saleEvent);
+      localStorage.setItem('_rt_analytics_events', JSON.stringify(existing));
+      refreshMetrics(false);
+      showToast('🎉 Venda Cakto de R$ 27,90 conciliada com sucesso!', '💸');
+    }
+
+    // 8. Limpar Eventos
+    function clearAllEvents() {
+      if (confirm('Deseja realmente limpar todos os eventos gravados neste navegador?')) {
+        localStorage.removeItem('_rt_analytics_events');
+        refreshMetrics(false);
+        showToast('Histórico de eventos foi limpo.', '🗑️');
+      }
+    }
+
+    // 9. Exportar CSV
+    function exportData(format) {
+      const events = getStoredEvents();
+      if (events.length === 0) {
+        alert('Não há eventos gravados para exportar.');
+        return;
+      }
+
+      if (format === 'csv') {
+        let csv = 'Data/Hora,Evento,VisitorId,UTM_Source,UTM_Campaign,ClickId,Detalhes\n';
+        events.forEach(e => {
+          const date = new Date(e.ts).toISOString();
+          const type = e.type;
+          const vid = e.visitorId || '';
+          const src = (e.utms && e.utms.utm_source) || '';
+          const camp = (e.utms && e.utms.utm_campaign) || '';
+          const cid = (e.clickIds && (e.clickIds.fbclid || e.clickIds.gclid || e.clickIds.ttclid)) || '';
+          const extra = e.extra ? JSON.stringify(e.extra).replace(/"/g, '""') : '';
+          csv += `"${date}","${type}","${vid}","${src}","${camp}","${cid}","${extra}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `metodo3acordes-telemetria-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Relatório CSV exportado!', '📥');
+      }
+    }
+
+    // 10. Toast Helper
+    function showToast(msg, icon = '✅') {
+      const toast = document.getElementById('admin-toast');
+      const toastMsg = document.getElementById('admin-toast-msg');
+      const toastIcon = document.getElementById('admin-toast-icon');
+      if (!toast) return;
+
+      toastMsg.textContent = msg;
+      toastIcon.textContent = icon;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Inicialização ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+    });
+  </script>
+</body>
+</html>

@@ -275,3 +275,101 @@ test("Tracking Template (Atribuição Avançada e Telemetria)", () => {
     "Deve exportar a API pública window.Tracker",
   );
 });
+
+test("Painel Administrativo (/admin) e Métricas de Funil", () => {
+  const adminIndexPath = path.join(rootDir, "admin", "index.html");
+  const adminHtmlPath = path.join(rootDir, "admin.html");
+
+  assert.ok(fs.existsSync(adminIndexPath), "admin/index.html deve existir");
+  assert.ok(
+    fs.existsSync(adminHtmlPath),
+    "admin.html deve existir como rota alternativa",
+  );
+
+  const adminContent = fs.readFileSync(adminIndexPath, "utf-8");
+
+  // Autenticação e Segurança
+  assert.match(
+    adminContent,
+    /pin-modal/,
+    "Deve conter modal de autenticação por PIN",
+  );
+  assert.match(adminContent, /DEFAULT_PIN/, "Deve conter lógica de PIN padrão");
+  assert.match(
+    adminContent,
+    /lockDashboard/,
+    "Deve conter função para bloquear o painel",
+  );
+
+  // KPIs e Funil
+  assert.match(
+    adminContent,
+    /kpi-visitors/,
+    "Deve conter KPI de Visitantes Únicos",
+  );
+  assert.match(adminContent, /kpi-pageviews/, "Deve conter KPI de PageViews");
+  assert.match(adminContent, /kpi-audio/, "Deve conter KPI de Áudio");
+  assert.match(
+    adminContent,
+    /kpi-checkouts/,
+    "Deve conter KPI de Initiate Checkout",
+  );
+  assert.match(
+    adminContent,
+    /kpi-conversion/,
+    "Deve conter KPI de Taxa de Conversão",
+  );
+  assert.match(
+    adminContent,
+    /funnel-bar-1/,
+    "Deve conter barra visual de funil",
+  );
+
+  // UTMs e Dispositivos
+  assert.match(
+    adminContent,
+    /utm-table-body/,
+    "Deve conter tabela de atribuição por UTM",
+  );
+  assert.match(
+    adminContent,
+    /dev-mobile-bar/,
+    "Deve conter métrica de dispositivos mobile vs desktop",
+  );
+  assert.match(
+    adminContent,
+    /click-fbclid/,
+    "Deve exibir contagem de Click IDs (fbclid, gclid, ttclid)",
+  );
+
+  // Recursos de Gestão e Exportação
+  assert.match(
+    adminContent,
+    /simulateCaktoSale/,
+    "Deve conter simulador de webhook da Cakto",
+  );
+  assert.match(adminContent, /exportData/, "Deve permitir exportação em CSV");
+});
+
+test("Telemetria e Disparo de Eventos da Landing Page para o Admin", () => {
+  assert.match(
+    htmlContent,
+    /Tracker\.track\(['"]audio_play['"]/,
+    "Landing page deve registrar evento audio_play para o funil do admin",
+  );
+  assert.match(
+    htmlContent,
+    /Tracker\.track\(['"]initiate_checkout['"]/,
+    "Landing page deve registrar evento initiate_checkout para o funil do admin",
+  );
+  assert.match(
+    htmlContent,
+    /Tracker\.track\(['"]scroll_depth['"]/,
+    "Landing page deve registrar evento scroll_depth para o funil do admin",
+  );
+  assert.match(
+    htmlContent,
+    /href=["']admin\/["']/,
+    "Rodapé da landing page deve conter link para acesso ao painel admin",
+  );
+});
