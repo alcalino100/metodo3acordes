@@ -180,6 +180,66 @@
       scrollbar-width: none;
     }
 
+    /* Skeleton Loading Screens com Shimmer Suave (Motion Principles) */
+    .skeleton {
+      position: relative;
+      background-color: rgba(6, 46, 35, 0.4);
+      overflow: hidden;
+    }
+    .skeleton::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: skeletonShimmer 1.8s infinite ease-in-out;
+    }
+    @keyframes skeletonShimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    /* Animação de Barras de Som (Equalizador do Sintetizador) */
+    @keyframes soundwavePulse {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+    .soundwave-playing .bar-1 { animation: soundwavePulse 0.55s infinite ease-in-out 0.1s; }
+    .soundwave-playing .bar-2 { animation: soundwavePulse 0.45s infinite ease-in-out 0.2s; }
+    .soundwave-playing .bar-3 { animation: soundwavePulse 0.65s infinite ease-in-out 0.05s; }
+    .soundwave-playing .bar-4 { animation: soundwavePulse 0.5s infinite ease-in-out 0.25s; }
+    .soundwave-playing .bar-5 { animation: soundwavePulse 0.6s infinite ease-in-out 0.15s; }
+
+    /* Scroll Reveal Suave */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+    }
+    .reveal-item.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .skeleton::after {
+        animation: none;
+      }
+      .cta-pulse {
+        animation: none;
+      }
+    }
+
     /* Optical sizing typography */
     .tracking-display {
       letter-spacing: -0.035em;
@@ -268,14 +328,16 @@
 
         <!-- Imagem Hero com Efeito Profundo e Badge de Confiança -->
         <div class="relative max-w-lg mx-auto mb-6 group">
-          <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 shadow-glass bg-brand-surface/30">
+          <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 shadow-glass bg-brand-surface/30 skeleton">
             <img 
               src="assets/hero-violao-biblia-BblVi23x.jpg" 
               alt="Violão e Bíblia Sagrada em momento de louvor" 
-              class="w-full h-56 sm:h-72 object-cover object-center"
+              class="w-full h-56 sm:h-72 object-cover object-center transition-opacity duration-500 opacity-0"
               loading="eager"
+              fetchpriority="high"
+              onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton');"
             >
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-transparent to-transparent pointer-events-none"></div>
             
             <!-- Badge Flutuante Glassmorphic -->
             <div class="absolute bottom-3 left-3 right-3 glass-panel rounded-xl p-2.5 flex items-center gap-2.5 shadow-lg">
@@ -374,12 +436,26 @@
             Toque nos botões abaixo para escutar a melodia real direto do seu celular:
           </p>
 
+          <!-- Visualizador de Áudio e Feedback Tátil (Motion Principles) -->
+          <div class="flex items-center justify-center gap-1.5 h-6 mb-1">
+            <div id="audioVisualizer" class="flex items-center gap-1 h-5 opacity-40 transition-opacity duration-300">
+              <span class="w-1 bg-amber-400 rounded-full h-1.5 bar-1"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-3 bar-2"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-4.5 bar-3"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-2.5 bar-4"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-3.5 bar-5"></span>
+            </div>
+          </div>
+          <p id="audioStatus" class="text-[11px] text-amber-300/90 font-medium h-4 mb-3 transition-colors">
+            Toque nos acordes abaixo para ouvir o som real do violão:
+          </p>
+
           <!-- Botões de Áudio Interativo (Web Audio API Real) -->
           <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-3">
             <button 
               type="button" 
-              onclick="playChordAudio('G')" 
-              class="btn-press bg-brand-surface hover:bg-amber-400 hover:text-brand-dark border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition"
+              onclick="playChordAudio('G', this)" 
+              class="chord-btn btn-press bg-brand-surface border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition shadow-sm active:scale-95"
             >
               <span>🔊 Sol (G)</span>
               <span class="text-[9px] opacity-75 font-normal">Tocar Base</span>
@@ -387,8 +463,8 @@
 
             <button 
               type="button" 
-              onclick="playChordAudio('C9')" 
-              class="btn-press bg-brand-surface hover:bg-amber-400 hover:text-brand-dark border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition"
+              onclick="playChordAudio('C9', this)" 
+              class="chord-btn btn-press bg-brand-surface border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition shadow-sm active:scale-95"
             >
               <span>🔊 Dó9 (C9)</span>
               <span class="text-[9px] opacity-75 font-normal">Tocar Transição</span>
@@ -396,8 +472,8 @@
 
             <button 
               type="button" 
-              onclick="playChordAudio('D')" 
-              class="btn-press bg-brand-surface hover:bg-amber-400 hover:text-brand-dark border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition"
+              onclick="playChordAudio('D', this)" 
+              class="chord-btn btn-press bg-brand-surface border border-amber-400/40 text-amber-300 font-extrabold text-xs py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition shadow-sm active:scale-95"
             >
               <span>🔊 Ré (D)</span>
               <span class="text-[9px] opacity-75 font-normal">Tocar Resolução</span>
@@ -651,14 +727,15 @@
     <section class="py-10 sm:py-16 bg-gradient-to-b from-brand-deep to-brand-dark">
       <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="relative rounded-2xl overflow-hidden border border-white/15 shadow-glass mb-6">
+        <div class="relative rounded-2xl overflow-hidden border border-white/15 shadow-glass mb-6 bg-brand-surface/30 skeleton">
           <img 
             src="assets/familia-louvor-CSSx-gn5.jpg" 
             alt="Família reunida cantando louvor com violão" 
-            class="w-full h-52 sm:h-80 object-cover"
+            class="w-full h-52 sm:h-80 object-cover transition-opacity duration-500 opacity-0"
             loading="lazy"
+            onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton');"
           >
-          <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent pointer-events-none"></div>
           <div class="absolute bottom-3 left-3 right-3 text-center">
             <span class="bg-black/75 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-amber-300 inline-block">
               Culto doméstico: adoração genuína no coração do seu lar
@@ -856,9 +933,20 @@
             </div>
           </div>
 
-          <div class="text-center mb-5">
+          <div class="text-center mb-4">
             <h3 class="text-xl sm:text-2xl font-black text-white">Método Louvor em 3 Acordes</h3>
             <p class="text-slate-300 text-xs">O pacote completo e definitivo para cristãos iniciantes.</p>
+          </div>
+
+          <!-- Mockup Visual 3D com Skeleton Screen (Tangibilidade) -->
+          <div class="relative max-w-[240px] sm:max-w-[280px] mx-auto mb-5 rounded-2xl overflow-hidden border border-white/10 shadow-glass bg-brand-surface/30 skeleton">
+            <img 
+              src="assets/mockup-ebook-CsRDhrHR.jpg" 
+              alt="Apostila e Bônus do Método Louvor em 3 Acordes" 
+              class="w-full h-44 sm:h-52 object-contain p-2 bg-gradient-to-b from-brand-deep/80 to-brand-dark/95 transition-opacity duration-500 opacity-0"
+              loading="lazy"
+              onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton');"
+            >
           </div>
 
           <!-- Checklist Tudo Incluso -->
@@ -1085,7 +1173,7 @@
       <p id="toast-name" class="text-[11px] font-bold text-white truncate">Marcos S. de São Paulo</p>
       <p class="text-[10px] text-emerald-400 font-medium">Acabou de adquirir o método</p>
     </div>
-    <button onclick="dismissToast()" class="text-slate-400 hover:text-white text-xs p-1" aria-label="Fechar notificação">✕</button>
+    <button type="button" onclick="dismissToast()" class="text-slate-400 hover:text-white text-xs p-1" aria-label="Fechar notificação">✕</button>
   </div>
 
   <!-- ===================================================================== -->
@@ -1095,24 +1183,66 @@
     // 1. Atualizar ano no rodapé
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // 2. Web Audio API Engine — Sintetizador Acústico de Violão Real
+    // 2. Web Audio API Engine — Sintetizador Acústico de Violão Real com Fallback Resiliente
     let audioContext = null;
+    let activeChordTimer = null;
     const chordFrequencies = {
-      'G': [196.00, 246.94, 293.66, 392.00, 587.33, 783.99], // Sol maior
-      'C9': [130.81, 164.81, 196.00, 293.66, 392.00],        // Dó com nona
-      'D': [146.83, 220.00, 293.66, 369.99]                  // Ré maior
+      G: [196.00, 246.94, 293.66, 392.00, 587.33, 783.99], // Sol maior
+      C9: [130.81, 164.81, 196.00, 293.66, 392.00],        // Dó com nona
+      D: [146.83, 220.00, 293.66, 369.99]                  // Ré maior
     };
 
-    function playChordAudio(chordName) {
+    async function playChordAudio(chordName, buttonEl) {
+      const visualizer = document.getElementById('audioVisualizer');
+      const statusEl = document.getElementById('audioStatus');
+      
+      // Feedback visual nos botões
+      document.querySelectorAll('.chord-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-400/25', 'text-amber-200');
+      });
+      if (buttonEl) {
+        buttonEl.classList.add('ring-2', 'ring-amber-400', 'bg-amber-400/25', 'text-amber-200');
+      }
+
+      if (visualizer) {
+        visualizer.classList.add('soundwave-playing', 'opacity-100');
+        visualizer.classList.remove('opacity-40');
+      }
+      if (statusEl) {
+        const chordLabels = { G: 'Sol Maior (G)', C9: 'Dó com Nona (C9)', D: 'Ré Maior (D)' };
+        statusEl.textContent = `🎵 Reproduzindo ${chordLabels[chordName] || chordName}...`;
+        statusEl.classList.add('text-amber-400');
+      }
+
+      clearTimeout(activeChordTimer);
+      activeChordTimer = setTimeout(() => {
+        if (buttonEl) {
+          buttonEl.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-400/25', 'text-amber-200');
+        }
+        if (visualizer) {
+          visualizer.classList.remove('soundwave-playing');
+          visualizer.classList.add('opacity-40');
+          visualizer.classList.remove('opacity-100');
+        }
+        if (statusEl) {
+          statusEl.textContent = 'Toque nos acordes abaixo para ouvir o som real do violão:';
+          statusEl.classList.remove('text-amber-400');
+        }
+      }, 1900);
+
       try {
         if (!audioContext) {
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+          }
         }
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
+        if (audioContext && audioContext.state === 'suspended') {
+          await audioContext.resume();
         }
+        if (!audioContext) return;
 
-        const freqs = chordFrequencies[chordName] || chordFrequencies['G'];
+        const freqs = chordFrequencies[chordName] || chordFrequencies.G;
         const now = audioContext.currentTime;
 
         freqs.forEach((freq, idx) => {
@@ -1120,9 +1250,9 @@
           const gain = audioContext.createGain();
           const filter = audioContext.createBiquadFilter();
 
-          // Timbre suave estilo violão
+          // Timbre suave estilo violão de nylon
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.038); // Dedilhado com leve atraso
+          osc.frequency.setValueAtTime(freq, now + idx * 0.038);
 
           filter.type = 'lowpass';
           filter.frequency.setValueAtTime(1400, now + idx * 0.038);
@@ -1130,21 +1260,21 @@
 
           gain.gain.setValueAtTime(0.001, now + idx * 0.038);
           gain.gain.linearRampToValueAtTime(0.22, now + idx * 0.038 + 0.018);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.038 + 1.9);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.038 + 1.8);
 
           osc.connect(filter);
           filter.connect(gain);
           gain.connect(audioContext.destination);
 
           osc.start(now + idx * 0.038);
-          osc.stop(now + idx * 0.038 + 2.0);
+          osc.stop(now + idx * 0.038 + 1.9);
         });
-      } catch (e) {
-        console.error('Audio play error', e);
+      } catch (err) {
+        console.warn('Audio playback handled gracefully:', err);
       }
     }
 
-    // 3. Encaminhador dinâmico de UTMs para a Cakto
+    // 3. Encaminhador dinâmico de UTMs para a Cakto com Debounce e Indicador de Progresso
     (function forwardUtms() {
       const baseUrl = 'https://pay.cakto.com.br/wtd6not_1074745';
       const searchParams = window.location.search;
@@ -1152,14 +1282,21 @@
       const caktoButtons = document.querySelectorAll('.cakto-btn, a[href*="cakto.com.br"]');
       
       caktoButtons.forEach(btn => {
+        let finalUrl = baseUrl;
         if (searchParams) {
           const separator = baseUrl.includes('?') ? '&' : '?';
-          btn.href = baseUrl + separator + searchParams.substring(1);
-        } else {
-          btn.href = baseUrl;
+          finalUrl = baseUrl + separator + searchParams.substring(1);
         }
+        btn.href = finalUrl;
 
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+          if (btn.dataset.navigating === 'true') {
+            e.preventDefault();
+            return;
+          }
+          btn.dataset.navigating = 'true';
+
+          // Disparo de evento Meta Pixel
           if (typeof fbq === 'function') {
             fbq('track', 'InitiateCheckout', {
               content_name: 'Método 3 Acordes',
@@ -1167,9 +1304,50 @@
               currency: 'BRL'
             });
           }
+
+          // Feedback tátil de carregamento do botão
+          const originalContent = btn.innerHTML;
+          btn.innerHTML = `<span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-brand-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Carregando Checkout Seguro...</span>
+          </span>`;
+          btn.style.opacity = '0.92';
+
+          setTimeout(() => {
+            btn.dataset.navigating = 'false';
+            btn.innerHTML = originalContent;
+            btn.style.opacity = '1';
+          }, 3500);
         });
       });
     })();
+
+    // 4. Verificação de cache para imagens com Skeleton Screen
+    document.querySelectorAll('img').forEach(img => {
+      if (img.complete && img.naturalHeight !== 0) {
+        img.classList.remove('opacity-0');
+        if (img.parentElement && img.parentElement.classList.contains('skeleton')) {
+          img.parentElement.classList.remove('skeleton');
+        }
+      }
+    });
+
+    // 5. Scroll Reveal Suave (Intersection Observer)
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal-item').forEach(el => revealObserver.observe(el));
+    }
 
     // 4. Cronômetro regressivo
     (function countdown() {

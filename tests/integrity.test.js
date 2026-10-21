@@ -152,3 +152,26 @@ test("Seções Críticas do Funil de Vendas Presentes", () => {
     "Player interativo de áudio deve estar presente com sintetizador de acordes",
   );
 });
+
+test("Motion Principles, Skeletons e Tangibilidade Visual", () => {
+  assert.match(
+    htmlContent,
+    /skeletonShimmer/,
+    "Animação de shimmer de skeleton deve estar no CSS",
+  );
+  assert.match(
+    htmlContent,
+    /soundwavePulse/,
+    "Animação de barras de som (soundwave) deve existir",
+  );
+  assert.match(
+    htmlContent,
+    /assets\/mockup-ebook-CsRDhrHR\.jpg/,
+    "Mockup 3D deve estar inserido na oferta",
+  );
+  assert.match(
+    htmlContent,
+    /audioVisualizer/,
+    "Equalizador visual do player de áudio deve estar no DOM",
+  );
+});
