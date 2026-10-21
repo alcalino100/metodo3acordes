@@ -1,0 +1,26 @@
+{
+  "name": "metodo3acordes",
+  "version": "1.0.0",
+  "description": "Página de vendas de alta conversão - Método Louvor em 3 Acordes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage tests/*.test.js",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check:budget": "node scripts/check-budget.js"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15"
+  },
+  "keywords": [
+    "landing-page",
+    "infoproduto",
+    "louvor-em-3-acordes",
+    "cakto"
+  ],
+  "author": "Método 3 Acordes",
+  "license": "UNLICENSED"
+}

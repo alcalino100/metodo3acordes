@@ -5,3 +5,5 @@ Thumbs.db
 backup-original/
 .vscode/
 .idea/
+node_modules/
+coverage/

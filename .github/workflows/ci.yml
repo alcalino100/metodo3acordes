@@ -1,0 +1,34 @@
+name: Quality Pipeline CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-pipeline:
+    name: Biome Lint, Testes Automatizados e Performance Budget
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Executar Biome Linter & Code Standards
+        run: npm run lint
+
+      - name: Executar Testes Automatizados de Integridade
+        run: npm test
+
+      - name: Validar Performance Budget (Mobile-First)
+        run: npm run check:budget
