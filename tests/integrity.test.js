@@ -234,3 +234,44 @@ test("Segurança e Sanitização de Parâmetros de Checkout", () => {
     "Proteção de rate limiting / debounce contra spam de cliques deve existir",
   );
 });
+
+test("Tracking Template (Atribuição Avançada e Telemetria)", () => {
+  const tJsPath = path.join(rootDir, "assets", "t.js");
+  assert.ok(
+    fs.existsSync(tJsPath),
+    "Script assets/t.js deve existir no projeto",
+  );
+
+  assert.match(
+    htmlContent,
+    /<script[^>]+src=["']assets\/t\.js["']/i,
+    "Tag script de assets/t.js deve estar presente no HTML",
+  );
+  assert.match(
+    htmlContent,
+    /data-id=["'][^"']+["']/,
+    "Atributo data-id deve estar configurado no script de tracking",
+  );
+
+  const tJsContent = fs.readFileSync(tJsPath, "utf-8");
+  assert.match(
+    tJsContent,
+    /_rt_vid/,
+    "Deve gerar ou recuperar visitorId _rt_vid",
+  );
+  assert.match(
+    tJsContent,
+    /_rt_sid/,
+    "Deve gerar ou recuperar sessionId _rt_sid",
+  );
+  assert.match(
+    tJsContent,
+    /utm_source/,
+    "Deve capturar e armazenar parâmetros de UTM",
+  );
+  assert.match(
+    tJsContent,
+    /window\.Tracker/,
+    "Deve exportar a API pública window.Tracker",
+  );
+});
